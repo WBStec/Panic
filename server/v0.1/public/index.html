@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Panic</title>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="description" content="">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="bower_components/angular-material/angular-material.css" />
+    <link rel="stylesheet" href="bower_components/font-awesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/app.css" />
+    <link rel="stylesheet" href="css/table.css" />
+</head>
+
+<body ng-app="claims.app" layout="row"  ng-cloak class="appBackground">
+    <div flex tabIndex="-1" role="main">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <md-button class="md-icon-button" ng-click="ul.toggleLeft()" class="md-primary" aria-label="Settings" ng-show="isLoggedIn">
+                    <md-icon md-svg-src="assets/icon/ic_menu_24px.svg"></md-icon>
+                </md-button>
+                <h2>
+          <span>Panic</span>
+        </h2>
+                <span flex></span>
+                <md-menu>
+                    <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)" class="md-primary " aria-label="Settings" ng-show="isLoggedIn">
+                        <md-icon md-svg-src="assets/icon/ic_more_vert_24px.svg" ng-show="isLoggedIn"></md-icon>
+                    </md-button>
+                    <md-menu-content width="4">
+                        <md-menu-item>
+                            <md-button aria-label="Logout" ng-click="logout()">
+                                Logout
+                            </md-button>
+                        </md-menu-item>
+                    </md-menu-content>
+                </md-menu>
+            </div>
+        </md-toolbar>
+        <div ui-view></div>
+        <div ng-show="showLoader" ng-class="loaderClass"> </div>
+        <div class="loaderText" ng-show="showLoader">{{loaderMessage}} </div>
+        <div class="loaderLayer" ng-show="showLoader"></div>
+    </div>
+
+
+
+    <!-- Bower Components -->
+    <script src="bower_components/angular/angular.js"></script>
+    <script src="bower_components/angular-animate/angular-animate.js"></script>
+    <script src="bower_components/angular-aria/angular-aria.js"></script>
+    <script src="bower_components/angular-messages/angular-messages.js"></script>
+    <script src="bower_components/angular-material/angular-material.js"></script>
+    <script src="bower_components/angular-cookies/angular-cookies.js"></script>
+    <script src="bower_components/angular-password/angular-password.js"></script>
+    <script src="bower_components/angular-ui-router/release/angular-ui-router.js"></script>
+    <script src="bower_components/ngstorage/ngStorage.js"></script>
+    <script src="bower_components/moment/moment.js"></script>
+    <!-- ---------------- -->
+    <!-- ---------------- -->
+
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    
+    <!-- Main App -->
+    <script src="js/app.js"></script>
+    <!-- --------- -->
+
+    <!-- Models/Constants -->
+    <script src="js/models.js"></script>
+    <!-- ---- -->
+    <!-- Auth -->
+    <script src="js/auth/services.js"></script>
+    <script src="js/auth/controllers.js"></script>
+    <!-- ---- -->
+    <!-- Nav 
+    <script src="js/nav/services.js"></script>
+    <script src="js/nav/controllers.js"></script>-->
+    <!-- --- -->
+    <!-- Home -->
+    <script src="js/home/services.js"></script>
+    <script src="js/home/controllers.js"></script>
+    <!-- -------- -->
+    <!-- userSubtitution 
+    <script src="js/userSubtitution/services.js"></script>
+    <script src="js/userSubtitution/controllers.js"></script>-->
+    <!-- -------- -->
+    
+</body>
+
+</html>

@@ -1,0 +1,55 @@
+<div>
+    <md-content class="layout-fill  layout-align-center-start layout-row" style="padding: 48px; width: 100%">
+        <md-whiteframe class="md-whiteframe-z2 layout-fill layout-column flex-md-50 flex-lg-50 flex-gt-lg-33 flex">
+            <md-toolbar class=" md-tall  layout-align-center layout-column">
+                <div class="md-toolbar-tools md-toolbar-tools-bottom layout-row"><h3 class="md-display-1"> Sign in </h3>
+                </div>
+                <!--<img src="../assets/logo.png" width="80%" height="60%"/>-->
+            </md-toolbar>
+            <!--<div layout="column" layout-align="center center" style="margin: 48px;">-->
+            <!--<img src="../assets/ats_logo.svg" style="max-width: 256px;" />-->
+            <!--</div>-->
+
+            <form name="loginForm"
+                      class="ng-pristine layout-fill layout-margin layout-padding layout-column ng-invalid ng-invalid-required">
+
+                    <md-input-container class="md-icon-float md-block">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>User name</label>
+                        <md-icon md-font-icon="fa fa-user"class="name"></md-icon>
+                        <input type="text"
+                               ng-model="login.credentials.username"
+                               aria-label="Employee Id" required=""
+                               class="ng-pristine ng-untouched md-input ng-invalid ng-invalid-required"
+                               id="input_14" aria-required="true"
+                               aria-invalid="true">
+                    </md-input-container>
+                    <md-input-container class="md-icon-float md-block">
+                        <!-- Use floating label instead of placeholder -->
+                        <label>Password</label>
+                        <md-icon md-font-icon="fa fa-lock"class="name"></md-icon>
+                        <input type="password"
+                               ng-model="login.credentials.password"
+                               aria-label="password"
+                               required=""
+                               class="ng-pristine ng-untouched md-input ng-invalid ng-invalid-required"
+                               id="input_15"
+                               aria-required="true"
+                               aria-invalid="true">
+                    </md-input-container>
+
+                    <div class="layout-align-space-between-center layout-row">
+                        <button class="md-raised md-accent md-button md-ink-ripple"
+                                ng-click="submitLogin()" aria-label="login" ng-disabled="login.loginForm.$invalid()"
+                                aria-disabled="false"><span class="ng-scope">Sign In </span></button>
+                    </div>
+                </form>
+                <md-toolbar ng-show="login.error"
+                            class="md-warn layout-fill layout-margin layout-padding layout-row ng-hide"
+                            aria-hidden="true"><p class="md-body-1 ng-binding"></p></md-toolbar>
+                <md-divider></md-divider>
+
+            </div>
+        </md-whiteframe>
+    </md-content>
+</div>

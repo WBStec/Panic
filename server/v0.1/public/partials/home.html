@@ -1,0 +1,41 @@
+<div layout="column" layout-align="start center" style="margin-top: 24px;">
+    <!-- <md-progress-linear md-mode="indeterminate" ng-show="isLoading"></md-progress-linear> -->
+    <md-card class="md-whiteframe-z2" style="background-color:#FFFFFF; margin: 34px;">
+        <md-card-title flex="initial" class="default_background">
+            <md-card-title-text>
+                <span class="md-headline">Alarms</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <div class="table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Reporter</th>
+                            <th>Lat</th>
+                            <th>Lon</th>
+                            <th>State</th>
+                            <th style="text-align: right;width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="alarm in alarms track by $index" ng-click="showAddUser($event,alarm)">
+                            <td>{{alarm.alarmDate}}</td>
+                            <td>{{alarm.uuid}}</td>
+                            <td>{{alarm.gpsLat}}</td>
+                            <td>{{alarm.gpsLon}}</td>
+                            <td>{{alarm.state}}</td>
+                            <td style="text-align: right;">
+                                <md-icon class="deleteButton" md-svg-src="assets/icon/ic_close_24px.svg" ng-click="update($event,alarm)"></md-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+        </md-card-actions>
+    </md-card>
+</div>
+<!-- -->

@@ -1,0 +1,37 @@
+<ion-view view-title="Register" name="register-view">
+  <ion-content class="padding" style="background-color:#EFEFEF">
+      <div>
+        <center style='padding-top:10pt'>
+          <span  >
+            <i class="" style='font-size:40pt;background-color:#13BFE6;color:white;border-radius:50%;padding:8pt;display:none'>
+
+            </i>
+          </span>
+        </center>
+      </div>
+      <div class="list list-inset" style="margin-bottom:10px">
+      </div>
+      <div class="list list-inset" style="margin-bottom:10px">
+          <label class="item item-input">
+              <input type="text" placeholder="Name" ng-model="data.name">
+          </label>
+      </div>
+      <div class="list list-inset" style="margin-top:10px">
+          <label class="item item-input" >
+              <input type="text" placeholder="Surname" ng-model="data.surname">
+          </label>
+      </div>
+      <div class="list list-inset" style="margin-top:10px">
+          <label class="item item-input" >
+              <input type="tel" placeholder="Phone" ng-model="data.phone">
+          </label>
+      </div>
+      <div class="list list-inset" style="margin-top:10px">
+          <label class="item item-input" >
+              <input type="text" placeholder="Address" ng-model="data.address">
+          </label>
+      </div>
+
+      <button class="button button-block" style="background-color:#13BFE6;color:white" ng-click="register()"><b>Register</b></button>
+  </ion-content>
+</ion-view> 
