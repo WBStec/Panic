@@ -122,10 +122,11 @@ router.route('/alarms/')
     })
     // get all the users (accessed at GET http://localhost:8080/api/alarms)
     .get(function(req, res) {
-        Alarm.find(function(err, alarms) {
+        Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
             if (err)
                 res.send(err);
 
+            // alarms.reverse();
             res.json(alarms);
         });
     });
