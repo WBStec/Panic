@@ -21,6 +21,9 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
       StatusBar.styleDefault();
     }
   });
+  $ionicPlatform.registerBackButtonAction(function (event) {
+          event.preventDefault();
+  }, 100);
 })
 .config(function($stateProvider, $urlRouterProvider) {
 
@@ -32,6 +35,11 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 
   // setup an abstract state for the tabs directive
  
+  .state('loader', {
+      url: '/loader',
+      templateUrl: 'templates/loader.html',
+      controller: 'LoaderCtrl'
+  })
   .state('register', {
       url: '/register',
       templateUrl: 'templates/register.html',
@@ -45,6 +53,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services', '
 ;
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/register');
+  $urlRouterProvider.otherwise('/loader');
 
 });
