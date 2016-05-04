@@ -7,6 +7,15 @@ div.spinner {
   height: 85px;
   text-align: center;
 }
+
+div.spinnerHalf {
+  margin: auto;
+  position: absolute;
+  top: -50%;
+  left: 0; bottom: 0; right: 0;
+  height: 85px;
+  text-align: center;
+}
 .spinner svg {
   width: 19% !important;
   height: 85px !important;

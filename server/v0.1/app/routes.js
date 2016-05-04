@@ -54,10 +54,10 @@ router.route('/users')
 
     // create a bear (accessed at POST http://localhost:8080/api/users)
     .post(function(req, res) {
-         res.json({ message: 'User created!' });
-         return;
+         // res.json({ message: 'User created!' });
+         // return;
          
-	console.log('POST USER');        
+	console.log('POST USER ' + JSON.stringify(req.body));        
         var user = new User();      // create a new instance of the User model
         user.uuid = req.body.uuid;  // set the users name (comes from the request)
         user.name = req.body.name;  // set the users name (comes from the request)
@@ -65,7 +65,7 @@ router.route('/users')
         user.phone = req.body.phone;  // set the users name (comes from the request)
         user.address = req.body.address;  // set the users name (comes from the request)
         user.photo = req.body.photo;  // set the users name (comes from the request)
-	user.active = true;	
+	    user.active = true;	
         // save the bear and check for errors
         user.save(function(err) {
             if (err)
@@ -96,10 +96,6 @@ router.route('/users/:uuid')
         });
     });
   
-
-
-
-
 
 router.route('/alarms/')
 

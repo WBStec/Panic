@@ -11,6 +11,7 @@ angular.module('starter.controllers', [])
            $cordovaFile.readAsText(cordova.file.dataDirectory, fileName)
             .then(function (success) {
               $state.go('main');  
+              // $state.go('register');
             }, function (error) {
               $state.go('register');  
             });
@@ -21,7 +22,7 @@ angular.module('starter.controllers', [])
     });
 
 })
-.controller('RegisterCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaFile) {
+.controller('RegisterCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaFile,$cordovaCamera) {
  
     var fileName = "panic_cache.txt";
     
@@ -29,7 +30,40 @@ angular.module('starter.controllers', [])
  
     $scope.data.user = '';// = myservice.username;
     $scope.data.password = '';//= myservice.password;
+
+    $scope.data.name = '';
+    $scope.data.surname = '';
+    $scope.data.phone = '';
+    $scope.data.address = '';
+    $scope.data.photo = 'img/ph.png';
+
     $scope.register = function() {
+
+        if($scope.data.name == '')
+        {
+          $scope.showAlert('Error','Please provide a name');
+          return;
+        }
+        if($scope.data.surname == '')
+        {
+          $scope.showAlert('Error','Please provide a surname');
+          return;
+        }
+        if($scope.data.phone == '')
+        {
+          $scope.showAlert('Error','Please provide a phone number');
+          return;
+        }
+        if($scope.data.address == '')
+        {
+          $scope.showAlert('Error','Please provide a address');
+          return;
+        }
+        if($scope.data.photo == 'img/ph.png')
+        {
+          $scope.showAlert('Error','Please provide a photo');
+          return;
+        }
 
         var uuid = device.uuid;
 
@@ -40,7 +74,7 @@ angular.module('starter.controllers', [])
                 .then(function (success) {
                   $state.go('main'); 
                 }, function (error) {
-                  alert('Could not write file.');
+                  $scope.showAlert('Error','Could not write file.');
                 });
             });
       }catch(err)
@@ -48,6 +82,35 @@ angular.module('starter.controllers', [])
         alert(err);
       }
     }
+
+    $scope.takePhoto = function()
+    {
+      var options = {
+          quality: 75,
+          destinationType: Camera.DestinationType.DATA_URL,
+          sourceType: Camera.PictureSourceType.CAMERA,
+          allowEdit: false,
+          encodingType: Camera.EncodingType.JPEG,
+          targetWidth: 200,
+          targetHeight: 200,
+          popoverOptions: CameraPopoverOptions,
+          saveToPhotoAlbum: false
+      };
+
+          $cordovaCamera.getPicture(options).then(function (imageData) {
+              $scope.data.photo = "data:image/jpeg;base64," + imageData;
+          }, function (err) {
+              // An error occured. Show a message to the user
+          });
+
+    }
+
+      $scope.showAlert = function(title,msg) {
+         var alertPopup = $ionicPopup.alert({
+           title: title,
+           template: msg
+         });
+       };
 
 })
 .controller('MainCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaGeolocation) {
@@ -66,25 +129,24 @@ angular.module('starter.controllers', [])
    $scope.long = 0;
    $scope.panic = function()
    {
-
       $scope.gpsEnabled(function(enabled)
       {
           if(enabled)
           {
+            $scope.showAlert('Info','Panic Sent');
             $scope.getGps(function(lat,long){
                 if(lat != false)
                 {
                   $scope.alarm.gpsLat = lat;
                   $scope.alarm.gpsLon = long;
-                  alert('Send Panic');
                   panicService.panic($scope.alarm).success(function(data) {
-                      alert(JSON.stringify(data.message));
+                      $scope.showAlert('Panic Response',JSON.stringify(data.message));
                   });
                 }
             })
           }else
           {
-            alert('ENABLE GPS');
+            $scope.showAlert('Error','Please enable GPS services');
           }
       })
    }
@@ -124,17 +186,10 @@ angular.module('starter.controllers', [])
         });
    }
 
-
-   // $scope.setProgress = function(progress)
-   // {
-   //  console.log('setProgress ' + progress);
-   //  return {background-image: linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) 50%, rgba(255,255,255,0.5) 51%)};
-   // };
-
    $scope.setProgress = function(progress)
    {
       console.log('setProgress ' + progress);
-      var grad = 'linear-gradient(0deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0) ' + progress + '%, rgba(255,0,0,0.5) '+(progress+1)+'%)';
+      var grad = 'linear-gradient(0deg, rgba(255,0,0,1) 0%, rgba(255,0,0,1) ' + progress + '%, rgba(255,255,255,0) '+(progress+1)+'%)';
       return { "background-image": grad}
    }
 
@@ -185,7 +240,7 @@ angular.module('starter.controllers', [])
       {
         $scope.loop();
       });
-    }, 10000);   
+    }, 100000);   
   }
 
   document.addEventListener('deviceready', function () {
@@ -195,6 +250,13 @@ angular.module('starter.controllers', [])
     $scope.getGps();
     $scope.loop();
   })
+
+  $scope.showAlert = function(title,msg) {
+         var alertPopup = $ionicPopup.alert({
+           title: title,
+           template: msg
+         });
+       };
 
 })
 
