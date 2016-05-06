@@ -1,6 +1,6 @@
 mainModule.controller('HomeCtrl', [
-    '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$cookies', '$rootScope', 'AlarmService', '$scope', '$state','$window',
-    function($mdSidenav, $mdBottomSheet, $log, $q, $cookies, $rootScope, AlarmService, $scope, $state,$window) {
+    '$mdSidenav', '$mdBottomSheet', '$log', '$q', '$cookies', '$rootScope', 'AlarmService', '$scope', '$state','$window','$mdDialog','$mdMedia',
+    function($mdSidenav, $mdBottomSheet, $log, $q, $cookies, $rootScope, AlarmService, $scope, $state,$window,$mdDialog, $mdMedia) {
         var self = this;
 
         self.initUsers = function()
@@ -10,7 +10,8 @@ mainModule.controller('HomeCtrl', [
                         console.log('SUCCESSFULL RETURN');
                         //TODO: Add a loader
                         // self.users = self.filterUsers(data)
-                        self.resolveLocation(self.users);
+                        // self.resolveLocation(self.users);
+                        self.users = data;
                         $scope.users = self.users;
                     })
                     .error(function(data, status, headers, config)
@@ -76,6 +77,124 @@ mainModule.controller('HomeCtrl', [
               }
               
             });
+        }
+
+        $scope.showAlarm = function($event,alarm)
+        {
+          var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
+          self.alarm = alarm;
+
+          for(var i in self.users)
+          {
+            if(self.users[i].uuid == alarm.uuid)
+            {
+              alarm.name = self.users[i].name;
+              alarm.surname = self.users[i].surname;
+              alarm.phone = self.users[i].phone;
+              alarm.address = self.users[i].address;
+              alarm.photo = self.users[i].photo;
+              break;
+            }
+          }
+
+          $mdDialog.show({
+                    controller: viewAlarmCtrl,
+                    templateUrl: '../partials/alarmDailog.html',
+                    parent: angular.element(document.body),
+                    targetEvent: $event,
+                    clickOutsideToClose: true,
+                    fullscreen: useFullScreen
+                })
+                .then(function(answer) {
+                    // self.status = 'You said the information was "' + answer + '".';
+
+                }, function() {
+                    // self.status = 'You cancelled the dialog.';
+                    // $rootScope.showToastBtmRight("Cancelled user update.");
+                });
+        }
+
+        function viewAlarmCtrl($scope, $mdDialog) {
+
+            // $scope.managers = self.managers;
+            $scope.hide = function() {
+                $mdDialog.hide();
+            };
+            $scope.cancel = function() {
+                $mdDialog.cancel();
+            };
+
+            $scope.delete = function(ev) {
+ 
+            };
+
+            $scope.alarm = self.alarm;
+
+            $scope.update = function() {
+
+                if ($scope.user.login != '' && $scope.user.name != '' && $scope.user.code != '')
+                {
+                    $rootScope.showCustomLoader("Please wait while updating user.");
+
+                    UserService.updateUser($scope.user)
+                        .success(function(data) {
+                            $rootScope.hideCustomLoader();
+
+                            if(typeof data.statusCode != 'undefined' && data.statusCode == 200)
+                            {
+                                $mdDialog.hide();
+                                $rootScope.showToastBtmRight("User has been updated.");
+                                self.initUsers();
+                            }else if(typeof data.message != 'undefined')
+                            {
+                                $rootScope.showToastBtmRight(data.message);
+                            }else
+                            {
+                                $rootScope.showToastBtmRight('User Update failed');
+                            }
+                            
+                        });
+                } else {
+                    console.log("Not all fields entered correctly.");
+                    alert("Not all fields entered correctly.");
+                }
+            };
+
+            $scope.add = function() {
+                var emptyObj = {};
+
+                if ($scope.user.login != '' && $scope.user.name != '' && $scope.user.code != '')
+                {
+                    // $scope.user.contactInformation.email2 = $scope.user.contactInformation.email;
+                    // $scope.user.token = token;
+                    // $scope.user.communityId = $rootScope.user.membership[0]._communityId;
+                    // //$mdDialog.hide($scope.user);
+
+                    //$rootScope.showCustomLoader("Please wait while adding user.");
+
+                    UserService.addUser($scope.user)
+                        .success(function(data) {
+                            $rootScope.hideCustomLoader();
+
+                            if(typeof data.statusCode != 'undefined' && data.statusCode == 200)
+                            {
+                                $mdDialog.hide();
+                                $rootScope.showToastBtmRight("User has been added.");
+                                self.initUsers();
+                            }else if(typeof data.message != 'undefined')
+                            {
+                                $rootScope.showToastBtmRight(data.message);
+                            }else
+                            {
+                                $rootScope.showToastBtmRight('User Adding failed');
+                            }
+                        });
+                } else {
+                    console.log("Not all fields entered correctly.");
+                    alert("Not all fields entered correctly.");
+                }
+
+            };
         }
 
 

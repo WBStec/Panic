@@ -8,8 +8,8 @@
 		</div>
 		<div style="width:100%;height:50%">
     	  <button id='panicBtn' ng-mouseup="mouseUp()" ng-mousedown="mouseDown($event)" ng-mouseleave="mouseUp()" my-touchend="mouseUp()" ng-mouseup="onMouseUp($event)"
-         ng-mouseleave="mouseUp($event)" ng-mousemove="mouseUp($event)" ng-mouseover="mouseUp($event)" ng-click="mouseUp($event)" class="button button-block" style="background-color:#13BFE6;color:white;height: 80%;border-radius: 5%;" 
-         ng-style="setProgress(progress)"><b>HOLD TO PANIC {{progress}} %</b></button>
+         ng-mouseleave="mouseUp($event)" ng-mousemove="mouseUp($event)" ng-mouseover="mouseUp($event)" ng-click="mouseUp($event)" class="button button-block" style="background-color:#13BFE6;color:white;height: 80%;border-radius: 5%;border-top: 2px solid rgb(19, 191, 230);" 
+         ng-style="setProgress(progress)"><b>{{btnLabel}}</b></button>
   		</div>
   </ion-content>
 </ion-view> 

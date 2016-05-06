@@ -2,10 +2,11 @@ angular.module('starter.services', [])
 
 
 
-.factory('panicService', function($http) {
+.factory('panicService2', function($http) {
   return {
       //host:'http://10.0.0.100:8080'
-      host:'http://10.0.0.101:8080'
+      // host:'http://10.0.0.101:8080'
+      host:'http://196.31.215.98:80'
       ,
       getPoll : function() {
         return $http.get(this.host + '/api/polls');
@@ -91,7 +92,8 @@ angular.module('starter.services', [])
 .service('panicService',function($http)
 {
   return {
-    host:'http://10.0.0.101:8080'
+    // host:'http://10.0.0.101:8080'
+    host:'http://196.31.215.98:80'
     ,
     register : function(formData)
     {

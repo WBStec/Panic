@@ -1,0 +1,53 @@
+<md-dialog aria-label="user" ng-cloak id='userDialog'>
+    <form name="userForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>ALARM</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-font-icon="fa fa-times" class=""></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div>
+                <div layout-gt-sm="row">
+                    <md-input-container style="width:100%">
+                        <label>Date</label>
+                        <input ng-model="alarm.alarmDate" name="name">
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container style="width:100%">
+                        <label>Name</label>
+                        <input ng-model="alarm.name" name="name">
+                    </md-input-container>
+                    <md-input-container style="width:100%">
+                        <label>Surname</label>
+                        <input ng-model="alarm.surname" name="name">
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container style="width:100%">
+                        <label>Address</label>
+                        <input ng-model="alarm.address" name="name">
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                     <center  >
+                        <h3>
+                            Picture
+                        </h3>
+                        <img ng-src="{{alarm.photo}}" alt="Place Holder" height="200" width="200"  style="margin-top:10px;">
+                    </center>
+                     <center  >
+                        <h3>
+                            Location
+                        </h3>
+                        <img ng-src="http://maps.googleapis.com/maps/api/staticmap?center={{alarm.gpsLat}},{{alarm.gpsLon}}&zoom=15&size=200x200&sensor=false&markers=color:red%7C{{alarm.gpsLat}},{{alarm.gpsLon}}"  alt="Place Holder" height="200" width="200"  style="margin-top:10px;"/>
+                    </center>
+                </div>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>

@@ -20,7 +20,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr ng-repeat="alarm in alarms track by $index" ng-click="showAddUser($event,alarm)">
+                        <tr ng-repeat="alarm in alarms track by $index" ng-click="showAlarm($event,alarm)">
                             <td>{{alarm.alarmDate}}</td>
                             <td>{{alarm.uuid}}</td>
                             <td>{{alarm.gpsLat}}</td>

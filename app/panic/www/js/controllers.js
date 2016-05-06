@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
  
     document.addEventListener('deviceready', function () {
 
-      var fileName = "panic_cache.txt";
+      var fileName = "panic_cache_1.txt";
 
       $cordovaFile.checkFile(cordova.file.dataDirectory, fileName)
         .then(function (success) {
@@ -24,7 +24,7 @@ angular.module('starter.controllers', [])
 })
 .controller('RegisterCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaFile,$cordovaCamera) {
  
-    var fileName = "panic_cache.txt";
+    var fileName = "panic_cache_1.txt";
     
     $scope.data = {};
  
@@ -66,6 +66,7 @@ angular.module('starter.controllers', [])
         }
 
         var uuid = device.uuid;
+        $scope.data.uuid = uuid;
 
         try{
             panicService.register($scope.data).success(function(data) {
@@ -76,7 +77,11 @@ angular.module('starter.controllers', [])
                 }, function (error) {
                   $scope.showAlert('Error','Could not write file.');
                 });
+            }).error(function(x,y,z)
+            {
+              $scope.showAlert('Error','Could not register');
             });
+            $scope.showAlert('Registering','Please Wait');
       }catch(err)
       {
         alert(err);
@@ -127,20 +132,25 @@ angular.module('starter.controllers', [])
 
    $scope.lat = 0;
    $scope.long = 0;
+   $scope.btnLabel = "HOLD TO PANIC 0%";
    $scope.panic = function()
    {
+      $scope.sendingPanic = true;
       $scope.gpsEnabled(function(enabled)
       {
           if(enabled)
           {
-            $scope.showAlert('Info','Panic Sent');
+            // $scope.showAlert('Info','Sending Panic');
+            $scope.btnLabel = "SENDING PANIC";
             $scope.getGps(function(lat,long){
                 if(lat != false)
                 {
                   $scope.alarm.gpsLat = lat;
                   $scope.alarm.gpsLon = long;
                   panicService.panic($scope.alarm).success(function(data) {
-                      $scope.showAlert('Panic Response',JSON.stringify(data.message));
+                      // $scope.showAlert('Panic Response',data.message);
+                      $scope.btnLabel = data.message.toUpperCase();
+                      $scope.sendingPanic = false;
                   });
                 }
             })
@@ -190,23 +200,37 @@ angular.module('starter.controllers', [])
    {
       console.log('setProgress ' + progress);
       var grad = 'linear-gradient(0deg, rgba(255,0,0,1) 0%, rgba(255,0,0,1) ' + progress + '%, rgba(255,255,255,0) '+(progress+1)+'%)';
+      if(progress == 0)
+      {
+        grad = '';
+      }
       return { "background-image": grad}
    }
 
    $scope.isMouseDown = false;
    $scope.progress = 0;
+   $scope.sendingPanic = false;
    $scope.mouseDown = function(event)
    {
       event.preventDefault();
       console.log('mouseDown');
       $scope.isMouseDown = true;
-      $scope.runProgress();
+      if(!$scope.sendingPanic)
+      {
+        $scope.progress = 0;
+        $scope.runProgress();
+      }
    }
    $scope.mouseUp = function()
    {
       console.log('mouseUp');
       $scope.isMouseDown = false;
-      $scope.progress = 0;
+      
+      if(!$scope.sendingPanic)
+      {
+        $scope.btnLabel = "HOLD TO PANIC 0%";
+        $scope.progress = 0;
+      }
    }
    
    $scope.runProgress = function()
@@ -216,20 +240,21 @@ angular.module('starter.controllers', [])
         {
           $scope.progress = $scope.progress + 1;
           console.log('Increment ' + $scope.progress);
+          $scope.btnLabel = "HOLD TO PANIC " + $scope.progress + "%";
           $scope.$apply();
 
           if($scope.progress == 100)
           {
             $scope.panic();
             $scope.isMouseDown = false;
-            $scope.progress = 0;
+            // $scope.progress = 0;
             console.log('Send Panic ');
           }else
           {
             $scope.runProgress();
           }
         }
-      }, 30);  
+      }, 8);  
       return; 
    }
 
