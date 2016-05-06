@@ -57,6 +57,7 @@ mainModule.controller('HomeCtrl', [
 
         $scope.update = function($event,alarm)
         {
+          $event.stopPropagation();
           alarm.state = "closed";
           AlarmService.setAlarm(alarm)
             .success(function(data) {
