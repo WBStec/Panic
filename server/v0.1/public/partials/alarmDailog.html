@@ -42,10 +42,12 @@
                     </center>
                      <center  >
                         <h3>
-                            Location
+                            Location (click image)
                         </h3>
-                        <img ng-src="http://maps.googleapis.com/maps/api/staticmap?center={{alarm.gpsLat}},{{alarm.gpsLon}}&zoom=15&size=200x200&sensor=false&markers=color:red%7C{{alarm.gpsLat}},{{alarm.gpsLon}}"  alt="Place Holder" height="200" width="200"  style="margin-top:10px;"/>
-                    </center>
+						<a href="http://maps.google.com/?q={{alarm.gpsLat}},{{alarm.gpsLon}}">
+							<img ng-src="http://maps.googleapis.com/maps/api/staticmap?center={{alarm.gpsLat}},{{alarm.gpsLon}}&zoom=15&size=200x200&sensor=false&markers=color:red%7C{{alarm.gpsLat}},{{alarm.gpsLon}}"  alt="Place Holder" height="200" width="200"  style="margin-top:10px;"/>
+						</a>
+					</center>
                 </div>
             </div>
         </md-dialog-content>
