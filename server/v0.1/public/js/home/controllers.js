@@ -43,30 +43,35 @@ mainModule.controller('HomeCtrl', [
                     {
                       if(self.lastId != data[0]._id)
                       {
-                        self.soundAlarm = true;
-                        var audio = new Audio('assets/siren.mp3');
-                        audio.addEventListener('ended', function() {
-                          if(self.soundAlarm)
-                          {
-                            this.currentTime = 0;
-                            this.play();  
-                          }
-                          
-                        }, false);
-                        audio.play();
+                        if(!self.soundAlarm)
+                        {
 
-                         var confirm = $mdDialog.confirm()
-                                .title('A new alarm has been created')
-                                .textContent('Click okay to stop siren.')
-                                .ok('OK')
-                          $mdDialog.show(confirm).then(function() {
-                            self.soundAlarm = false;
-                          }, function() {
 
-                          });
+                          self.soundAlarm = true;
+                          var audio = new Audio('assets/siren.mp3');
+                          audio.addEventListener('ended', function() {
+                            if(self.soundAlarm)
+                            {
+                              this.currentTime = 0;
+                              this.play();  
+                            }
+                            
+                          }, false);
+                          audio.play();
 
-                          $rootScope.showToastBtmRight("New Alarm.");
-                          self.lastId = data[0]._id;
+                           var confirm = $mdDialog.confirm()
+                                  .title('A new alarm has been created')
+                                  .textContent('Click okay to stop siren.')
+                                  .ok('OK')
+                            $mdDialog.show(confirm).then(function() {
+                              self.soundAlarm = false;
+                            }, function() {
+
+                            });
+                        }
+
+                        $rootScope.showToastBtmRight("New Alarm.");
+                        self.lastId = data[0]._id;
                       }
                     }
                   }
