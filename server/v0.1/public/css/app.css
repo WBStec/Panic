@@ -26,6 +26,10 @@
     background: #ECEFF1;
 }
 
+.open{
+    /*background-color: cornflowerblue;*/
+    border: solid 5px black;
+}
 .icon-tile.selected{
     background: #00abb1;
 }
