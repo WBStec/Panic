@@ -21,12 +21,35 @@ mainModule.controller('HomeCtrl', [
 
         },
 
+        self.lastId = '';
+        self.firstCheck = true;
         self.initAlarms = function(cb)
         {
           AlarmService.getAlarms()
               .success(function(data, status, headers, config) {
                   console.log('SUCCESSFULL RETURN');
                   //TODO: Add a loader
+                  if(self.firstCheck)
+                  {
+                    if(data.length > 0)
+                    {
+                        self.lastId = data[0]._id
+                    }
+                    self.firstCheck = false;
+                  }else
+                  {
+                    if(data.length > 0)
+                    {
+                      if(self.lastId != data[0]._id)
+                      {
+                          $rootScope.showToastBtmRight("New Alarm.");
+                          var audio = new Audio('assets/siren.mp3');
+                          audio.play();
+                          self.lastId = data[0]._id;
+                      }
+                    }
+                  }
+
                   self.alarms = (data);
                   $scope.alarms = data;
                   cb();
