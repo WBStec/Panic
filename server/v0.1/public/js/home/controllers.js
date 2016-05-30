@@ -149,6 +149,7 @@ mainModule.controller('HomeCtrl', [
               alarm.surname = self.users[i].surname;
               alarm.phone = self.users[i].phone;
               alarm.address = self.users[i].address;
+              alarm.direction = self.users[i].direction;
               alarm.photo = self.users[i].photo;
               break;
             }
