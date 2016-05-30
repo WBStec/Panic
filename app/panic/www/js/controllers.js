@@ -35,6 +35,7 @@ angular.module('starter.controllers', [])
     $scope.data.surname = '';
     $scope.data.phone = '';
     $scope.data.address = '';
+    $scope.data.direction = '';
     $scope.data.photo = 'img/ph.png';
 
     $scope.register = function() {
@@ -59,6 +60,11 @@ angular.module('starter.controllers', [])
           $scope.showAlert('Error','Please provide a address');
           return;
         }
+        if($scope.data.direction == '')
+        {
+          $scope.showAlert('Error','Please provide a direction');
+          return;
+        }
         if($scope.data.photo == 'img/ph.png')
         {
           $scope.showAlert('Error','Please provide a photo');
@@ -73,6 +79,7 @@ angular.module('starter.controllers', [])
 
               $cordovaFile.writeFile(cordova.file.dataDirectory, fileName, uuid, true)
                 .then(function (success) {
+                  $scope.alertPopup.close();
                   $state.go('main'); 
                 }, function (error) {
                   $scope.showAlert('Error','Could not write file.');
@@ -111,14 +118,14 @@ angular.module('starter.controllers', [])
     }
 
       $scope.showAlert = function(title,msg) {
-         var alertPopup = $ionicPopup.alert({
+          $scope.alertPopup = $ionicPopup.alert({
            title: title,
            template: msg
          });
        };
 
 })
-.controller('MainCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaGeolocation) {
+.controller('MainCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaGeolocation,$cordovaFile) {
    
   var uuid = device.uuid;
 
@@ -130,9 +137,10 @@ angular.module('starter.controllers', [])
   $scope.alarm.gpsLon = '0';  
   $scope.alarm.state = 'open';  
 
-   $scope.lat = 0;
-   $scope.long = 0;
-   $scope.btnLabel = "HOLD TO PANIC 0%";
+  $scope.lat = 0;
+  $scope.long = 0;
+  $scope.btnLabel = "HOLD TO<br>PANIC";
+
    $scope.panic = function()
    {
       $scope.sendingPanic = true;
@@ -145,10 +153,14 @@ angular.module('starter.controllers', [])
             $scope.getGps(function(lat,long){
                 if(lat != false)
                 {
+
                   $scope.alarm.gpsLat = lat;
                   $scope.alarm.gpsLon = long;
                   panicService.panic($scope.alarm).success(function(data) {
                       // $scope.showAlert('Panic Response',data.message);
+                      $scope.currAlarmId = data.alarm;
+                      $scope.currAlarmState = 'open';
+                      $scope.stateLoop(1000);
                       $scope.btnLabel = data.message.toUpperCase();
                       $scope.sendingPanic = false;
                   });
@@ -157,9 +169,11 @@ angular.module('starter.controllers', [])
           }else
           {
             $scope.showAlert('Error','Please enable GPS services');
+            $scope.sendingPanic = false;
           }
       })
    }
+
 
    $scope.gpsEnabled = function(cb)
    {
@@ -171,6 +185,15 @@ angular.module('starter.controllers', [])
       });
    };
 
+  function _arrayBufferToBase64( buffer ) {
+    var binary = '';
+    var bytes = new Uint8Array( buffer );
+    var len = bytes.byteLength;
+    for (var i = 0; i < len; i++) {
+      binary += String.fromCharCode( bytes[ i ] );
+    }
+    return window.btoa( binary );
+  }
 
    $scope.getGps = function(cb)
    {
@@ -185,11 +208,36 @@ angular.module('starter.controllers', [])
             var long = position.coords.longitude;
             $scope.lat = lat;
             $scope.long = long;
+            
+            panicService.getMap(lat,long,$scope.mapWidth,$scope.mapHeight).then(function(data) {
+
+              $scope.map = _arrayBufferToBase64(data.data);
+              var saveData = {};
+              saveData.lat = lat;
+              saveData.long = long;
+              saveData.map = $scope.map;
+
+              try{
+                $cordovaFile.writeFile(cordova.file.dataDirectory, 'map.dat', saveData, true)
+                .then(function (success) {
+
+                }, function (error) {
+
+                });
+              }catch(err)
+              {
+                alert(err);
+              }
+
+
+              
+            });
+
             if(typeof cb != 'undefined')
               cb(lat,long);
 
         }, function(err) {
-            alert(JSON.stringify(err));
+            // alert(JSON.stringify(err));
             console.log(err);
             if(typeof cb != 'undefined')
               cb(false)
@@ -199,7 +247,7 @@ angular.module('starter.controllers', [])
    $scope.setProgress = function(progress)
    {
       console.log('setProgress ' + progress);
-      var grad = 'linear-gradient(0deg, rgba(255,0,0,1) 0%, rgba(255,0,0,1) ' + progress + '%, rgba(255,255,255,0) '+(progress+1)+'%)';
+      var grad = 'radial-gradient(circle, rgba(255,0,0,1) 0%, rgba(255,0,0,1) ' + progress + '%, rgba(255,255,255,0) '+(progress+1)+'%)';
       if(progress == 0)
       {
         grad = '';
@@ -212,14 +260,42 @@ angular.module('starter.controllers', [])
    $scope.sendingPanic = false;
    $scope.mouseDown = function(event)
    {
-      event.preventDefault();
-      console.log('mouseDown');
-      $scope.isMouseDown = true;
-      if(!$scope.sendingPanic)
+      if($scope.lat == 0)
       {
-        $scope.progress = 0;
-        $scope.runProgress();
+        $scope.gpsEnabled(function(enabled)
+        {
+          if(enabled)
+          {
+            $scope.showAlert('Error','Please enable GPS services');
+          }else
+          {
+            $scope.showAlert('Error','Waiting for GPS signal.');
+          }
+        })
+        return;
       }
+
+      $scope.gpsEnabled(function(enabled)
+      {
+        if(enabled)
+        {
+          event.preventDefault();
+          console.log('mouseDown');
+          $scope.isMouseDown = true;
+          if(!$scope.sendingPanic)
+          {
+            $scope.progress = 0;
+            $scope.runProgress();
+          }
+          
+        }else
+        {
+          $scope.showAlert('Error','Please enable GPS services');
+          $scope.sendingPanic = false;
+        }
+     })
+
+      
    }
    $scope.mouseUp = function()
    {
@@ -228,7 +304,7 @@ angular.module('starter.controllers', [])
       
       if(!$scope.sendingPanic)
       {
-        $scope.btnLabel = "HOLD TO PANIC 0%";
+        $scope.btnLabel = "HOLD TO<br>PANIC";
         $scope.progress = 0;
       }
    }
@@ -240,7 +316,7 @@ angular.module('starter.controllers', [])
         {
           $scope.progress = $scope.progress + 1;
           console.log('Increment ' + $scope.progress);
-          $scope.btnLabel = "HOLD TO PANIC " + $scope.progress + "%";
+          $scope.btnLabel = "HOLD TO<br>PANIC";
           $scope.$apply();
 
           if($scope.progress == 100)
@@ -258,26 +334,79 @@ angular.module('starter.controllers', [])
       return; 
    }
 
-  $scope.loop = function()
+  $scope.loop = function(timeout)
   {
     setTimeout(function(){
       $scope.getGps(function(lat,long)
       {
-        $scope.loop();
+        if(lat == false)
+        {
+          $scope.loop(1000);
+        }else
+        {
+          $scope.loop(100000);
+        }
       });
-    }, 100000);   
+    }, timeout);   
   }
+
+  $scope.stateLoop = function(timeout)
+  {
+      setTimeout(function(){
+          $scope.getAlarmState(function(data){
+
+            $scope.currAlarmState = data.state;
+            if($scope.currAlarmState == 'closed')
+            {
+                $scope.btnLabel = "ALARM<br>DONE";
+                $scope.progress = 0;
+            }else if($scope.currAlarmState == 'in Progress')
+            {
+                $scope.stateLoop(timeout);
+                $scope.btnLabel = "ASSISTANCE<br>ON ITS WAY";
+            }else  if($scope.currAlarmState == 'open')
+            {
+                $scope.stateLoop(timeout);
+            }
+            
+          })
+
+    }, timeout);   
+  }
+
+  $scope.getAlarmState = function(cb)
+  {
+        panicService.getState($scope.currAlarmId).then(function(data) {
+                cb(data.data);
+        });
+  }
+
 
   document.addEventListener('deviceready', function () {
     $scope.mapWidth = document.getElementById('mapContent').offsetWidth;
-    $scope.mapHeight = document.getElementById('mapContent').offsetHeight / 2;
-    $scope.mapHeight = Math.floor($scope.mapHeight) - 15;
+    $scope.mapHeight = document.getElementById('mapContent').offsetHeight;
+    // $scope.mapHeight = document.getElementById('mapContent').offsetHeight / 2;
+    // $scope.mapHeight = Math.floor($scope.mapHeight) - 15;
     $scope.getGps();
-    $scope.loop();
+    $scope.loop(10000);
+
+    $cordovaFile.readAsText(cordova.file.dataDirectory, 'map.dat')
+    .then(function (success) {
+
+      var data = JSON.parse(success);
+
+      $scope.lat = data.lat;
+      $scope.long = data.long;
+      $scope.map = data.map;
+      
+    }, function (error) {
+    });
+
+
   })
 
   $scope.showAlert = function(title,msg) {
-         var alertPopup = $ionicPopup.alert({
+         $scope.alertPopup = $ionicPopup.alert({
            title: title,
            template: msg
          });

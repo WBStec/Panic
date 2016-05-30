@@ -27,7 +27,8 @@
                             <td>{{alarm.gpsLon}}</td>
                             <td>{{alarm.state}}</td>
                             <td style="text-align: right;">
-                                <md-icon class="deleteButton" md-svg-src="assets/icon/ic_close_24px.svg" ng-click="update($event,alarm)"></md-icon>
+                                 <md-icon ng-show="alarm.state == 'open'" class="openButton" md-svg-src="assets/icon/ic_check_24px.svg" ng-click="update($event,alarm)"></md-icon>
+                                <md-icon ng-show="alarm.state == 'in Progress'" class="deleteButton" md-svg-src="assets/icon/ic_close_24px.svg" ng-click="update($event,alarm)"></md-icon>
                             </td>
                         </tr>
                     </tbody>

@@ -1,5 +1,10 @@
 
-
+.list-inset{
+  background-color: transparent;
+}
+.item-input{
+  border-radius: 10px;
+}
 div.spinner {
   margin: auto;
   position: absolute;
@@ -25,4 +30,17 @@ div.spinnerHalf {
 	background-color: #4098d3;
     color: #fff;
     
+}
+
+.buttonDiv
+{
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  z-index: 1;
+  top:60%;
+}
+
+.angular-with-newlines {
+  white-space: pre;
 }

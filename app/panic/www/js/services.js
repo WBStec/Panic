@@ -5,8 +5,8 @@ angular.module('starter.services', [])
 .factory('panicService2', function($http) {
   return {
       //host:'http://10.0.0.100:8080'
-      // host:'http://10.0.0.101:8080'
-      host:'http://196.31.215.98:80'
+      host:'http://10.0.0.104:8080'
+      // host:'http://196.31.215.98:80'
       ,
       getPoll : function() {
         return $http.get(this.host + '/api/polls');
@@ -94,6 +94,7 @@ angular.module('starter.services', [])
   return {
     // host:'http://10.0.0.101:8080'
     host:'http://196.31.215.98:80'
+    // host:'http://10.0.0.104:8080'
     ,
     register : function(formData)
     {
@@ -105,6 +106,19 @@ angular.module('starter.services', [])
     panic : function(formData)
     {
       return $http.post(this.host + '/api/alarms', formData);
+    }
+    ,
+    getMap : function(lat,long,mapWidth,mapHeight)
+    { 
+      var newLat = lat - 0.005;
+      console.log('http://maps.googleapis.com/maps/api/staticmap?center='+(newLat)+','+long+'&zoom=15&size='+mapWidth+'x'+mapHeight+'&sensor=false&markers=color:red%7C'+lat+','+long);
+      return $http.get('http://maps.googleapis.com/maps/api/staticmap?center='+(newLat)+','+long+'&zoom=15&size='+mapWidth+'x'+mapHeight+'&sensor=false&markers=color:red%7C'+lat+','+long,{responseType: 'arraybuffer'});
+      //return $http.get('http://10.0.0.101:8080/api/users/' + userName + '/' + password);
+    }
+    ,
+    getState : function(alarmId)
+    { 
+      return $http.get(this.host + '/api/alarms/' + alarmId);
     }
   }
 })
