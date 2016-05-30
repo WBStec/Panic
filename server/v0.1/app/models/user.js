@@ -8,6 +8,7 @@ var UserSchema   = new Schema({
 	phone: String,
 	photo: String,
 	address: String,
+	direction:String,
 	active: Boolean
 });
 

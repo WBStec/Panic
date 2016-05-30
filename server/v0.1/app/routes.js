@@ -64,6 +64,7 @@ router.route('/users')
         user.surname = req.body.surname;  // set the users name (comes from the request)
         user.phone = req.body.phone;  // set the users name (comes from the request)
         user.address = req.body.address;  // set the users name (comes from the request)
+        user.direction = req.body.direction;  // set the users name (comes from the request)
         user.photo = req.body.photo;  // set the users name (comes from the request)
 	    user.active = true;	
         // save the bear and check for errors
@@ -112,11 +113,12 @@ router.route('/alarms/')
 
 
         // save the bear and check for errors
-        alarm.save(function(err) {
+        alarm.save(function(err,alarm) {
             if (err)
                 res.send(err);
 
-            res.json({ message: 'Alarm created!' });
+            console.log(JSON.stringify(alarm));
+            res.json({ message: 'Alarm created!' ,alarm:alarm.id});
         });
         
     })
@@ -128,6 +130,22 @@ router.route('/alarms/')
 
             // alarms.reverse();
             res.json(alarms);
+        });
+    });
+
+
+    router.route('/alarms/:id')
+
+    // get the user with that uuidid (accessed at GET http://localhost:8080/api/userss/:uuid)
+    .get(function(req, res) {
+        Alarm.findOne({_id:req.params.id}, function(err, alarm) {
+            if (err)
+                res.send(err);
+
+            console.log(JSON.stringify(alarm));
+            var obj = {};
+            obj.state = alarm.state;
+            res.json(obj);
         });
     });
 

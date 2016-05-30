@@ -107,7 +107,14 @@ mainModule.controller('HomeCtrl', [
         $scope.update = function($event,alarm)
         {
           $event.stopPropagation();
-          alarm.state = "closed";
+          if(alarm.state == 'open')
+          {
+            alarm.state = "in Progress";
+          }else if(alarm.state == 'in Progress')
+          {
+            alarm.state = "closed";
+          }
+          
           AlarmService.setAlarm(alarm)
             .success(function(data) {
 
