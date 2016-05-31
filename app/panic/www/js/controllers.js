@@ -135,14 +135,24 @@ angular.module('starter.controllers', [])
   $scope.alarm.uuid = uuid;  
   $scope.alarm.gpsLat = '0';  
   $scope.alarm.gpsLon = '0';  
-  $scope.alarm.state = 'open';  
+  $scope.currAlarmState = '';  
 
   $scope.lat = 0;
   $scope.long = 0;
   $scope.btnLabel = "HOLD TO<br>PANIC";
 
+  $scope.hasPanicked = false;
    $scope.panic = function()
    {
+    if($scope.hasPanicked)
+    {
+      return;
+    }
+    $scope.hasPanicked = true;
+    setTimeout(function(){
+          $scope.hasPanicked = false;
+      }, 5000);
+
       $scope.sendingPanic = true;
       $scope.gpsEnabled(function(enabled)
       {
@@ -163,12 +173,22 @@ angular.module('starter.controllers', [])
                       $scope.stateLoop(1000);
                       $scope.btnLabel = data.message.toUpperCase();
                       $scope.sendingPanic = false;
+                  }).error(function(data,status,headers,config)
+                  {
+                      $scope.showAlert('Error','Could not Create alarm. Make sure you have internet connection.');
+                      $scope.btnLabel = "HOLD TO<br>PANIC";
+                      $scope.progress = 0;
+                      $scope.hasPanicked = false;
+                      $scope.sendingPanic = false;
                   });
                 }
             })
           }else
           {
             $scope.showAlert('Error','Please enable GPS services');
+            $scope.btnLabel = "HOLD TO<br>PANIC";
+            $scope.progress = 0;
+            $scope.hasPanicked = false;
             $scope.sendingPanic = false;
           }
       })
@@ -260,6 +280,11 @@ angular.module('starter.controllers', [])
    $scope.sendingPanic = false;
    $scope.mouseDown = function(event)
    {
+      if($scope.currAlarmState == 'open' || $scope.currAlarmState == 'in Progress' || $scope.hasPanicked)
+      {
+        return;
+      }
+
       if($scope.lat == 0)
       {
         $scope.gpsEnabled(function(enabled)
@@ -299,6 +324,12 @@ angular.module('starter.controllers', [])
    }
    $scope.mouseUp = function()
    {
+      console.log('mouseUp ' + $scope.currAlarmState);
+      if($scope.currAlarmState == 'open' || $scope.currAlarmState == 'in Progress' || $scope.hasPanicked)
+      {
+        return;
+      }
+
       console.log('mouseUp');
       $scope.isMouseDown = false;
       
@@ -355,7 +386,16 @@ angular.module('starter.controllers', [])
       setTimeout(function(){
           $scope.getAlarmState(function(data){
 
+            if($scope.currAlarmState != data.state)
+            {
+              if(data.state == 'closed' || data.state == 'in Progress')
+              {
+                navigator.vibrate(2000);
+              }
+            }
+
             $scope.currAlarmState = data.state;
+
             if($scope.currAlarmState == 'closed')
             {
                 $scope.btnLabel = "ALARM<br>DONE";

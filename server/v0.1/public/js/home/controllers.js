@@ -12,7 +12,8 @@ mainModule.controller('HomeCtrl', [
                         // self.users = self.filterUsers(data)
                         // self.resolveLocation(self.users);
                         self.users = data;
-                        $scope.users = self.users;
+                        $scope.users = self.users.reverse();
+
                     })
                     .error(function(data, status, headers, config)
                     {
