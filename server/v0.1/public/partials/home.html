@@ -15,6 +15,7 @@
                             <th>Reporter</th>
                             <th>Lat</th>
                             <th>Lon</th>
+                            <th>Source</th>
                             <th>State</th>
                             <th style="text-align: right;width: 50px;"></th>
                         </tr>
@@ -25,6 +26,7 @@
                             <td>{{alarm.uuid}}</td>
                             <td>{{alarm.gpsLat}}</td>
                             <td>{{alarm.gpsLon}}</td>
+                            <td>{{alarm.source}}</td>
                             <td>{{alarm.state}}</td>
                             <td style="text-align: right;">
                                  <md-icon ng-show="alarm.state == 'open'" class="openButton" md-svg-src="assets/icon/ic_check_24px.svg" ng-click="update($event,alarm)"></md-icon>

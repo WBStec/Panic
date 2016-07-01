@@ -56,9 +56,58 @@ router.route('/sms')
 
     // create a bear (accessed at POST http://localhost:8080/api/users)
     .post(function(req, res) {
-        console.log('POST SMS ' + JSON.stringify(req));
-        console.log('POST SMS ' + JSON.stringify(req));
+        console.log('POST SMS ' + JSON.stringify(req.body));
         res.send('True');
+    })
+    .get(function(req, res) {
+
+        console.log('GET SMS ' + JSON.stringify(req.query.Phonenumber));
+
+        var num = req.query.Phonenumber ;
+        num = num.slice(-9);
+        console.log(num);
+
+        User.findOne({phone: new RegExp(num, "i")}, function(err, user) {
+            if (err)
+            {
+                console.log(err);
+                res.send('True');
+            }
+            if(user != null)
+            {
+                console.log(user);
+
+                var alarm = new Alarm();      // create a new instance of the User model
+                alarm.alarmDate = new Date();  
+
+                alarm.uuid = user.uuid;    
+                alarm.state = 'open';  
+                alarm.source = 'sms';
+                // save the bear and check for errors
+                alarm.save(function(err,alarm) {
+                    if (err)
+                        res.send(err);
+
+                    console.log(JSON.stringify(alarm));
+                    // res.json({ message: 'Alarm created!' ,alarm:alarm.id});
+                    res.send('True');
+                });
+
+            }else
+            {
+                console.log('Number Not found');
+                res.send('True');
+            }
+            
+            
+
+        });
+
+        
+
+        
+
+
     });
 
 
@@ -252,6 +301,7 @@ router.route('/alarms/')
         alarm.gpsLat = req.body.gpsLat;  
         alarm.gpsLon = req.body.gpsLon;  
         alarm.state = 'open';  
+        alarm.source = 'app';
 
 
         // save the bear and check for errors
