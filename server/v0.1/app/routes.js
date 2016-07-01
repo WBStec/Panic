@@ -1,8 +1,13 @@
 var express  = require('express');
+
 var User     = require('./models/user');
 var Alarm     = require('./models/alarm');
+var ServiceProvider = require('./models/serviceProvider');
+
 var mongoose   = require('mongoose');
 var path = require('path');
+var crypto = require('crypto');
+
 mongoose.connect('mongodb://localhost:27017/panic'); // connect to our database
 
 
@@ -47,6 +52,14 @@ router.use(function(req, res, next) {
 // all of our routes will be prefixed with /api
 app.use('/api', router);
 
+router.route('/sms')
+
+    // create a bear (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+        console.log('POST SMS ' + JSON.stringify(req));
+        console.log('POST SMS ' + JSON.stringify(req));
+        res.send('True');
+    });
 
 
 
@@ -56,8 +69,16 @@ router.route('/users')
     .post(function(req, res) {
          // res.json({ message: 'User created!' });
          // return;
-         
-	console.log('POST USER ' + JSON.stringify(req.body));        
+         if(typeof req.body.uuid == 'undefined')
+         {
+            req.body.uuid = crypto.randomBytes(32).toString('hex');
+         }
+         if(typeof req.body.active == 'undefined')
+         {
+            req.body.active = true;
+         }
+
+    console.log('POST USER ' + JSON.stringify(req.body));        
         var user = new User();      // create a new instance of the User model
         user.uuid = req.body.uuid;  // set the users name (comes from the request)
         user.name = req.body.name;  // set the users name (comes from the request)
@@ -66,7 +87,7 @@ router.route('/users')
         user.address = req.body.address;  // set the users name (comes from the request)
         user.direction = req.body.direction;  // set the users name (comes from the request)
         user.photo = req.body.photo;  // set the users name (comes from the request)
-	    user.active = true;	
+        user.active = req.body.active;  
         // save the bear and check for errors
         user.save(function(err) {
             if (err)
@@ -85,6 +106,127 @@ router.route('/users')
             res.json(users);
         });
     });
+
+
+
+router.route('/users/:id').put(function(req, res) {
+        console.log('user PUT ' + JSON.stringify(req.body));
+        console.log('user PUT ' + req.params.id);
+
+        var idd = mongoose.Types.ObjectId(req.params.id);
+
+        User.update({_id: idd}, {
+            name: req.body.name, 
+            surname: req.body.surname, 
+            phone: req.body.phone, 
+            address: req.body.address, 
+            direction: req.body.direction, 
+            active: req.body.active, 
+
+        }, function(err, affected, resp) {
+            if (err) 
+                res.send(err);
+            else
+                 res.json("succesfully saved");
+        })
+
+        // User.findOneAndUpdate(query, obj, {upsert:true}, function(err, doc){
+        //     if (err) 
+        //         res.send(err);
+        //     else
+        //         res.json("succesfully saved");
+        // }); 
+    });
+
+
+router.route('/sp')
+
+    // create a bear (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+         // res.json({ message: 'User created!' });
+         // return;
+
+         if(typeof req.body.active == 'undefined')
+         {
+            req.body.active = true;
+         }
+
+        console.log('POST ServiceProvider ' + JSON.stringify(req.body));        
+        var serviceProvider = new ServiceProvider();      // create a new instance of the User model
+        serviceProvider.login = req.body.login;
+        serviceProvider.password = req.body.password;
+        serviceProvider.role = "SP";
+        serviceProvider.name = req.body.name;
+        serviceProvider.phone = req.body.phone;
+        serviceProvider.active = req.body.active;
+
+
+        // save the bear and check for errors
+        serviceProvider.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'created!' });
+        });
+        
+    })
+    // get all the users (accessed at GET http://localhost:8080/api/users)
+    .get(function(req, res) {
+        ServiceProvider.find(function(err, users) {
+            if (err)
+                res.send(err);
+
+            res.json(users);
+        });
+    });
+
+
+
+router.route('/sp/:id').put(function(req, res) {
+        console.log('ServiceProvider PUT ' + JSON.stringify(req.body));
+        console.log('ServiceProvider PUT ' + req.params.id);
+
+        var idd = mongoose.Types.ObjectId(req.params.id);
+
+        ServiceProvider.update({_id: idd}, {
+            login : req.body.login,
+            password : req.body.password,
+            name : req.body.name,
+            phone : req.body.phone,
+            active : req.body.active
+        }, function(err, affected, resp) {
+            if (err) 
+                res.send(err);
+            else
+                 res.json("succesfully saved");
+        })
+    });
+
+
+
+router.route('/users/state/:id').put(function(req, res) {
+        console.log('user state PUT ' + JSON.stringify(req.body));
+        console.log('user state PUT ' + req.params.id);
+
+        var idd = mongoose.Types.ObjectId(req.params.id);
+
+        User.update({_id: idd}, {
+            active: req.body.active, 
+        }, function(err, affected, resp) {
+            if (err) 
+                res.send(err);
+            else
+                 res.json("succesfully saved");
+        })
+
+        // User.findOneAndUpdate(query, obj, {upsert:true}, function(err, doc){
+        //     if (err) 
+        //         res.send(err);
+        //     else
+        //         res.json("succesfully saved");
+        // }); 
+    });
+
 
 router.route('/users/:uuid')
 

@@ -15,7 +15,13 @@ mainModule.controller('LoginCtrl', [
                     }else
                     {
                         $rootScope.isLoggedIn = true;
+                        $rootScope.user = data;
+                        $rootScope.saveUserDetails(data);
+                        $rootScope.saveToken(data);
+                        $rootScope.$emit('SUCCESSFUL_LOGIN');
                         $state.go('home');
+
+
                     }
 
                     // $rootScope.isLoggedIn = true;

@@ -7,6 +7,7 @@ var AlarmSchema   = new Schema({
 	uuid: String,
 	gpsLat: String,
 	gpsLon: String,
+	serviceProvider: String,
 	state: String
 	
 });

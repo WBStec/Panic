@@ -3,6 +3,7 @@ mainModule.controller('HomeCtrl', [
     function($mdSidenav, $mdBottomSheet, $log, $q, $cookies, $rootScope, AlarmService, $scope, $state,$window,$mdDialog, $mdMedia) {
         var self = this;
 
+        $rootScope.view = 'home';
         self.initUsers = function()
         {
                 AlarmService.getUsers()
@@ -99,7 +100,8 @@ mainModule.controller('HomeCtrl', [
           setTimeout(function(){
             self.initAlarms(function()
             {
-              self.loop();
+              if($rootScope.view == 'home')
+                self.loop();
             });
           }, 1000);   
         }

@@ -1,0 +1,55 @@
+<md-dialog md-no-ink  aria-label="user" ng-cloak id='userDialog'>
+    <form name="userForm">
+        <md-toolbar>
+            <div class="md-toolbar-tools">
+                <h2>{{userManTittle}}</h2>
+                <span flex></span>
+                <md-button class="md-icon-button" ng-click="cancel()">
+                    <md-icon md-font-icon="fa fa-times" class=""></md-icon>
+                </md-button>
+            </div>
+        </md-toolbar>
+        <md-dialog-content>
+            <div>
+                <div layout-gt-sm="row">
+                    <md-input-container>
+                        <label>Login*</label>
+                        <input required ng-model="sp.login" name="name">
+                    </md-input-container>
+                    <md-input-container>
+                        <label>Password*</label>
+                        <input required ng-model="sp.password" name="name">
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container >
+                        <label>Name*</label>
+                        <input required name="firstName" ng-model="sp.name">
+                    </md-input-container>
+                </div>
+                <div layout-gt-sm="row">
+                    <md-input-container >
+                        <label>Phone*</label>
+                        <input required name="firstName" ng-model="sp.phone">
+                    </md-input-container>
+                </div>
+                
+                <div layout-gt-sm="row">
+                    <md-checkbox ng-model="sp.active" aria-label="Mobile User" class="user-category">
+                        Active
+                    </md-checkbox>
+                </div>
+
+                <md-button ng-if='isEditUser' class="md-raised md-accent md-button md-ink-ripple" id="addSub" aria-label="Show Substitution List" type="submit" ng-click="update($event)">
+                Update
+                    <md-icon md-font-icon="fa fa-user-plus" class="fa s32 md-primary md-hue-2"></md-icon>
+                </md-button>
+
+                <md-button  ng-if='!isEditUser' class="md-raised md-accent md-button md-ink-ripple" id="addUser" aria-label="Show User List" type="submit" ng-click="add()">
+                Add
+                    <md-icon md-font-icon="fa fa-user-plus" class="fa s32 md-primary md-hue-2"></md-icon>
+                </md-button>
+            </div>
+        </md-dialog-content>
+    </form>
+</md-dialog>
