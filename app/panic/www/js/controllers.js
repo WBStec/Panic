@@ -106,7 +106,8 @@ angular.module('starter.controllers', [])
           targetWidth: 200,
           targetHeight: 200,
           popoverOptions: CameraPopoverOptions,
-          saveToPhotoAlbum: false
+          saveToPhotoAlbum: false,
+          correctOrientation: true
       };
 
           $cordovaCamera.getPicture(options).then(function (imageData) {
@@ -173,6 +174,7 @@ angular.module('starter.controllers', [])
                       $scope.stateLoop(1000);
                       $scope.btnLabel = data.message.toUpperCase();
                       $scope.sendingPanic = false;
+                      navigator.vibrate(2000);
                   }).error(function(data,status,headers,config)
                   {
                       $scope.showAlert('Error','Could not Create alarm. Make sure you have internet connection.');
