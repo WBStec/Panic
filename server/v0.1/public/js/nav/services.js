@@ -7,22 +7,22 @@ serviceModule.factory('NavService', ['$q','$rootScope', function($q,$rootScope) 
         avatar: 'assets/icon/ic_home_24px.svg',
         state: 'home',
         homeScreen : false,
-        permission : [],
+        permission : ['SP','Admin'],
         level: level
     },{
         name: 'Users',
         avatar: 'assets/icon/ic_person_24px.svg',
         state: 'users',
         homeScreen : true,
-        permission : [],
-        level: [35]
+        permission : ['Admin'],
+        level: []
     },{
         name: 'Service Providers',
-        avatar: 'assets/icon/ic_person_24px.svg',
+        avatar: 'assets/icon/ic_directions_car_24px.svg',
         state: 'serviceProviders',
         homeScreen : true,
-        permission : [],
-        level: [35]
+        permission : ['Admin'],
+        level: []
     }];
     return {
         loadAllItems: function() {
@@ -30,44 +30,13 @@ serviceModule.factory('NavService', ['$q','$rootScope', function($q,$rootScope) 
         },
         loadUserItems: function(){
 
-            if(typeof $rootScope == 'undefined' )
-            {
-                $rootScope = {};
-            }
-            if(typeof $rootScope.user == 'undefined' )
-            {
-                $rootScope.user = {};
-            }
-            if(typeof $rootScope.user.profiles == 'undefined')
-            {
-                $rootScope.user.profiles = [];
-            }
-            if(typeof $rootScope.user.permissionsCollection == 'undefined')
-            {
-                $rootScope.user.permissionsCollection = {};
-            }
-             if(typeof $rootScope.user.permissionsCollection.all == 'undefined')
-            {
-                $rootScope.user.permissionsCollection.all = [];
-            }
-
-            var userPermissions = $rootScope.user.permissionsCollection.all;
-            var userLevels = $rootScope.user.profiles;
-
+            var userPermissions = $rootScope.user.role;
+            
             var result = navItems.filter(function(elem){
 
-                return true;
-
-                for(var i in userPermissions)
-                {
-                    if(elem.permission.indexOf(userPermissions[i].section)!=-1)
-                        return true;
-                }
-                for(var i in userLevels)
-                {
-                    if(elem.level.indexOf(userLevels[i])!=-1)
-                        return true;
-                }
+                if(elem.permission.indexOf(userPermissions)!=-1)
+                    return true;
+                
                 return false;//Do not filter
             });
 
