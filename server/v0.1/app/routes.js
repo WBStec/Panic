@@ -61,9 +61,9 @@ router.route('/sms')
     })
     .get(function(req, res) {
 
-        console.log('GET SMS ' + JSON.stringify(req.query.Phonenumber));
+        console.log('GET SMS ' + JSON.stringify(req.headers.phonenumber));
 
-        var num = req.query.Phonenumber ;
+        var num = req.headers.phonenumber ;
         num = num.slice(-9);
         console.log(num);
 
@@ -83,6 +83,7 @@ router.route('/sms')
                 alarm.uuid = user.uuid;    
                 alarm.state = 'open';  
                 alarm.source = 'sms';
+                alarm.closeDate = null;
                 // save the bear and check for errors
                 alarm.save(function(err,alarm) {
                     if (err)
@@ -344,6 +345,15 @@ router.route('/alarms/')
     router.route('/alarms/:id').put(function(req, res) {
         console.log('alarm PUT ' + JSON.stringify(req.body));
         console.log('alarm PUT ' + req.params.id);
+
+        if(typeof req.body.gpsLat == 'undefined')
+        {
+            req.body.gpsLat = "";
+        }
+        if(typeof req.body.gpsLon == 'undefined')
+        {
+            req.body.gpsLon = "";
+        }
 
         var obj = {
           "_id": req.params.id,
