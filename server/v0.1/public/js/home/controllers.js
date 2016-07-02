@@ -120,7 +120,7 @@ mainModule.controller('HomeCtrl', [
           
           AlarmService.setAlarm(alarm)
             .success(function(data) {
-
+              debugger;
               // $rootScope.hideCustomLoader();
 
               if(data == 'succesfully saved')
