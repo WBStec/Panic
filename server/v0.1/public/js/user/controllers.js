@@ -401,7 +401,6 @@ controllerModule.controller('UserManageCtrl', [
 
             $scope.add = function() {
                 
-                debugger;
                 if($scope.waiting == true)
                 {
                     return;
