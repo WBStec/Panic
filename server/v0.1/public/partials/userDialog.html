@@ -39,7 +39,16 @@
                         <input required name="firstName" ng-model="user.direction">
                     </md-input-container>
                 </div>
-                
+                <div layout-gt-sm="row">
+                  <md-input-container class="md-block" flex-gt-sm>
+                  <label>Area</label>
+                  <md-select ng-model="user.area"  >
+                    <md-option ng-repeat="area in areas track by $index" value="{{area.code}}">
+                      {{area.area}}
+                    </md-option>
+                  </md-select>
+                </md-input-container>
+                </div>
                 <div layout-gt-sm="row">
                     <md-checkbox ng-model="user.active" aria-label="Mobile User" class="user-category">
                         Active

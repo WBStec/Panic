@@ -77,53 +77,29 @@ controllerModule.controller('UserManageCtrl', [
                     });
 
         },
-
-        self.initLocations = function(cb)
+        self.initAreas = function()
         {
-            return;
-                UserService.getLocations()
+                UserService.getAreas()
                     .success(function(data, status, headers, config) {
                         console.log('SUCCESSFULL RETURN');
-                        //TODO: Add a loader
-                        self.locations = (data);
-                        cb();
-                    })
-                    .error(function(data, status, headers, config)
-                    {
-                        alert('Get User FAIL ' + data);
-                    });
 
-        }
-
-        self.initProfiles = function(cb)
-        {
-            return;
-                UserService.getProfiles()
-                    .success(function(data, status, headers, config) {
-                        console.log('SUCCESSFULL RETURN');
-                        //TODO: Add a loader
-
-                        self.profiles = [];
-                        for(var i in data)
-                        {
-                            if(data[i].id >= 28)
-                                self.profiles.push(data[i]);
+                        var flatList = {}
+                        for (var s in data) {
+                          flatList[data[s].code] = data[s];
                         }
-                        // self.profiles = (data);
-                        cb();
+
+                        self.areas = flatList;
+                        $scope.areas = self.areas;
+                        self.initUsers();
                     })
                     .error(function(data, status, headers, config)
                     {
                         alert('Get User FAIL ' + data);
                     });
 
-        }
+        },
 
-        // self.initLocations(function() {
-        //   self.initProfiles(function() {
-            self.initUsers();
-        //   });
-        // });
+        self.initAreas();
 
         $scope.searchText = "";
         self.currPage = 0;
@@ -342,6 +318,7 @@ controllerModule.controller('UserManageCtrl', [
 
         function editUserCtrl($scope, $mdDialog) {
 
+            $scope.areas = self.areas;
             // console.log("Add user" + self.managers.length);
             if(self.isEditUser)
                 $scope.userManTittle = "Edit User";

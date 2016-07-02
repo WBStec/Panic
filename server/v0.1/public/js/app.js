@@ -150,6 +150,7 @@ mainModule.run(['$rootScope', '$localStorage', '$mdToast', '$state', function ($
         $localStorage.user = data;
     }
     $rootScope.logout = function () {
+        $rootScope.view = 'login';        
         $localStorage.token = "";
         $rootScope.isLoggedIn = false;
         $state.go('login');

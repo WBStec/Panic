@@ -45,13 +45,35 @@ controllerModule.controller('SPManageCtrl', [
                         alert('Get User FAIL ' + data);
                     });
 
-        },
+        };
+        self.initAreas = function()
+        {
+                SPService.getAreas()
+                    .success(function(data, status, headers, config) {
+                        console.log('SUCCESSFULL RETURN');
+
+                        var flatList = {}
+                        for (var s in data) {
+                          flatList[data[s].code] = data[s];
+                        }
+
+                        self.areas = flatList;
+                        $scope.areas = self.areas;
+                        self.initSP();
+                    })
+                    .error(function(data, status, headers, config)
+                    {
+                        alert('Get User FAIL ' + data);
+                    });
+
+        }
+
 
         
 
         // self.initLocations(function() {
         //   self.initProfiles(function() {
-            self.initSP();
+            self.initAreas();
         //   });
         // });
 
@@ -132,6 +154,7 @@ controllerModule.controller('SPManageCtrl', [
 
         function editSPCtrl($scope, $mdDialog) {
 
+            $scope.areas = self.areas;
             // console.log("Add user" + self.managers.length);
             if(self.isEditUser)
                 $scope.userManTittle = "Edit User";

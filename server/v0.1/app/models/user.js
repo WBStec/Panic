@@ -10,6 +10,7 @@ var UserSchema   = new Schema({
 	address: String,
 	direction:String,
 	serviceProvider:String,
+	area:Number,
 	active: Boolean
 });
 

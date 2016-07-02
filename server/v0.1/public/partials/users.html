@@ -31,6 +31,7 @@
                             <th>Phone</th>
                             <th>Address</th>
                             <th>Direction</th>
+                            <th>Area</th>
                             <th>Active</th>
                             <th style="text-align: right;width: 50px;"></th>
                         </tr>
@@ -40,14 +41,15 @@
                             <td>{{user.name}} {{user.surname}}</td>
                             <td>{{user.phone}}</td>
                             <td>{{user.address}}</td>
-                              <md-tooltip md-direction="left" >
+                              <!-- <md-tooltip md-direction="left" >
                                     {{user.address}}
-                                </md-tooltip>
+                                </md-tooltip> -->
                             <td>{{user.direction}}
-                                <md-tooltip md-direction="left" >
+                                <!-- <md-tooltip md-direction="left" >
                                     {{user.location}}
-                                </md-tooltip>
+                                </md-tooltip> -->
                             </td>
+                            <td>{{areas[user.area].area}}</td>
                             <td>{{user.active}}</td>
                             <td style="text-align: right;">
                                 <md-icon ng-if="user.active" class="deleteButton" md-svg-src="assets/icon/ic_close_24px.svg" ng-click="disable($event,user)"></md-icon>
