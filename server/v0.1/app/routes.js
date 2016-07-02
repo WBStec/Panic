@@ -61,9 +61,9 @@ router.route('/sms')
     })
     .get(function(req, res) {
 
-        console.log('GET SMS ' + JSON.stringify(req.headers.phonenumber));
+        console.log('GET SMS ' + JSON.stringify(req.query.Phonenumber));
 
-        var num = req.headers.phonenumber ;
+        var num = req.query.Phonenumber ;
         num = num.slice(-9);
         console.log(num);
 
