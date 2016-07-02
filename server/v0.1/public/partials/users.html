@@ -1,0 +1,72 @@
+<div layout="column" layout-align="start center" style="margin-top: 24px;">
+    <!-- <md-progress-linear md-mode="indeterminate" ng-show="isLoading"></md-progress-linear> -->
+    <md-card class="md-whiteframe-z2" style="background-color:#FFFFFF; margin: 34px;">
+        <md-card-title flex="initial" class="default_background">
+            <md-card-title-text>
+                <span class="md-headline">Users</span>
+            </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+            <table style="width:100%">
+                <tr>
+                    <td>
+                        <md-input-container>
+                            <label>Filter</label>
+                            <input ng-model="searchText" ng-change="filterUsers()">
+                        </md-input-container>
+                    </td>
+                </tr>
+            </table>
+
+            <div layout="row" layout-align="end center" style="margin-bottom: -34px; margin-top: -34px;">
+                <md-button id="addUser" class="md-fab md-accent" ng-click="showAddUser($event)" aria-label="Add User">
+                    <md-icon md-svg-src="assets/icon/ic_add_24px.svg"></md-icon>
+                </md-button>
+            </div>
+            <div class="table-container">
+                <table class="styled-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Phone</th>
+                            <th>Address</th>
+                            <th>Direction</th>
+                            <th>Active</th>
+                            <th style="text-align: right;width: 50px;"></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr ng-repeat="user in users track by $index" ng-click="showAddUser($event,user)">
+                            <td>{{user.name}} {{user.surname}}</td>
+                            <td>{{user.phone}}</td>
+                            <td>{{user.address}}</td>
+                              <md-tooltip md-direction="left" >
+                                    {{user.address}}
+                                </md-tooltip>
+                            <td>{{user.direction}}
+                                <md-tooltip md-direction="left" >
+                                    {{user.location}}
+                                </md-tooltip>
+                            </td>
+                            <td>{{user.active}}</td>
+                            <td style="text-align: right;">
+                                <md-icon ng-if="user.active" class="deleteButton" md-svg-src="assets/icon/ic_close_24px.svg" ng-click="disable($event,user)"></md-icon>
+                                <md-icon ng-if="!user.active" class="openButton" md-svg-src="assets/icon/ic_check_24px.svg" ng-click="enable($event,user)"></md-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div ng-show='loaded'>
+                    <md-button ng-show="page > 0" class="md-raised md-primary" style="background-color:#ff9600;color: #fff;border-radius: 2px;"ng-click="prevPage()">Prev</md-button>
+                    <md-button ng-show="users.length == pageSize" class="md-raised md-primary" style="background-color:#ff9600;color: #fff;border-radius: 2px;"ng-click="nextPage()">Next</md-button>
+                </div>
+               <div ng-if='!loaded' layout="row" layout-sm="column" layout-align="space-around">
+                    <md-progress-circular md-mode="indeterminate"   md-diameter="160"></md-progress-circular>
+                </div>
+            </div>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+        </md-card-actions>
+    </md-card>
+</div>
+<!-- -->

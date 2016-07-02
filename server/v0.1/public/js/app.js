@@ -37,6 +37,11 @@ mainModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
                 templateUrl: 'partials/login.html',
                 controller: 'LoginCtrl'
             }).
+            state('serviceProviders', {
+                url: '/serviceProviders',
+                templateUrl: 'partials/serviceProviders.html',
+                controller: 'SPManageCtrl'
+            }).
             state('userSubtitution', {
                 url: '/userSubtitution',
                 templateUrl: 'partials/userSubtitution.html',
@@ -190,13 +195,14 @@ mainModule.run(['$rootScope', '$localStorage', '$mdToast', '$state', function ($
         "title": "Title",
         "content": "Hello Popover<br />This is a multiline message!"
     };
+
     var tok = $rootScope.getToken();
     if (typeof tok != "undefined" && tok != undefined && tok != "") {
         $rootScope.isLoggedIn = true;
 
         $rootScope.user = $rootScope.getUserDetails();
         //$state.go('users');
-        $rootScope.userRole=$rootScope.user.membership[0].communityRoles[0].role;
+        $rootScope.userRole=$rootScope.user;//$rootScope.user.membership[0].communityRoles[0].role;
 
         console.log("tokk " + JSON.stringify($rootScope.user));
         //alert("toke = "+tok);
@@ -217,26 +223,26 @@ mainModule.run(['$rootScope', '$localStorage', '$mdToast', '$state', function ($
 
             console.log("Halo 222");
             console.log("state change: " + toState.name + " login ==" + $rootScope.isLoggedIn);
-            // if (!$rootScope.isLoggedIn && toState.name != 'login') {
-            //     event.preventDefault();
-            //     $state.go('login');
-            // } else if ($rootScope.isLoggedIn && toState.name == 'login') {
-            //     console.log("you are logged on")
-            //     event.preventDefault();
-            //     if($rootScope.userRole=="admin") {
-            //         $rootScope.isManager=true;
-            //         $state.go('users');
-            //     }else{
-            //         $rootScope.isManager=false;
-            //         $state.go('claims');
-            //     }
-            // }
-            // //else if(!$rootScope.isLoggedIn){
-            // //  event.preventDefault();
-            // //  $state.go('login');
-            // //}
-            // // transitionTo() promise will be rejected with
-            // // a 'transition prevented' error
+            if (!$rootScope.isLoggedIn && toState.name != 'login') {
+                event.preventDefault();
+                $state.go('login');
+            } else if ($rootScope.isLoggedIn && toState.name == 'login') {
+                console.log("you are logged on")
+                event.preventDefault();
+                if($rootScope.userRole=="admin") {
+                    $rootScope.isManager=true;
+                    $state.go('home');
+                }else{
+                    $rootScope.isManager=false;
+                    $state.go('home');
+                }
+            }
+            //else if(!$rootScope.isLoggedIn){
+            //  event.preventDefault();
+            //  $state.go('login');
+            //}
+            // transitionTo() promise will be rejected with
+            // a 'transition prevented' error
         })
 }]);
 

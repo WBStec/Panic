@@ -12,17 +12,31 @@
     <link rel="stylesheet" href="css/table.css" />
 </head>
 
-<body ng-app="claims.app" layout="row"  ng-cloak class="appBackground">
-    <div flex tabIndex="-1" role="main">
+<body md-no-ink ng-app="claims.app" layout="row" ng-controller="MenuCtrl as ul" ng-cloak class="appBackground">
+    <md-sidenav class="site-sidenav md-sidenav-left" md-component-id="left" ng-click="ul.toggleList()" aria-label="Show User List" style="background-color: #F4F5F6;">
+        <md-toolbar>
+            <h3 class="md-headline">Menu</h3>
+        </md-toolbar>
+        <md-list>
+            <div class="menu">
+                <ul class="menu-toggle-list">
+                    <li ng-repeat="it in ul.navs">
+                        <md-button ng-click="ul.selectState(it)" ui-sref="{{it.state}}" ng-class="{'selected' : it === ul.selected }">
+                            <md-icon md-svg-src="{{it.avatar}}"></md-icon>
+                            {{it.name}}
+                        </md-button>
+                    </li>
+                </ul>
+            </div>
+        </md-list>
+    </md-sidenav>
+     <div flex tabIndex="-1" role="main">
         <md-toolbar>
             <div class="md-toolbar-tools">
                 <md-button class="md-icon-button" ng-click="ul.toggleLeft()" class="md-primary" aria-label="Settings" ng-show="isLoggedIn">
                     <md-icon md-svg-src="assets/icon/ic_menu_24px.svg"></md-icon>
                 </md-button>
-                <h2>
-          <span>Panic</span>
-        </h2>
-                <span flex></span>
+                <span flex><center><img src='assets/logo.png' style='height:64px'/></center></span>
                 <md-menu>
                     <md-button class="md-icon-button" ng-click="$mdOpenMenu($event)" class="md-primary " aria-label="Settings" ng-show="isLoggedIn">
                         <md-icon md-svg-src="assets/icon/ic_more_vert_24px.svg" ng-show="isLoggedIn"></md-icon>
@@ -72,13 +86,19 @@
     <script src="js/auth/services.js"></script>
     <script src="js/auth/controllers.js"></script>
     <!-- ---- -->
-    <!-- Nav 
+     <!-- Nav  -->
     <script src="js/nav/services.js"></script>
-    <script src="js/nav/controllers.js"></script>-->
+    <script src="js/nav/controllers.js"></script>
     <!-- --- -->
     <!-- Home -->
     <script src="js/home/services.js"></script>
     <script src="js/home/controllers.js"></script>
+    <!-- User -->
+    <script src="js/user/services.js"></script>
+    <script src="js/user/controllers.js"></script>
+    <!-- Service Providers -->
+    <script src="js/serviceProviders/services.js"></script>
+    <script src="js/serviceProviders/controllers.js"></script>
     <!-- -------- -->
     <!-- userSubtitution 
     <script src="js/userSubtitution/services.js"></script>
