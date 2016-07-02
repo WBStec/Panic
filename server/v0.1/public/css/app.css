@@ -43,7 +43,8 @@
 }
 
 .default_background{
-    background-color: #00abb1;
+    background-color:  rgb(224, 224, 224);
+    /*//#00abb1;*/
 }
 
 .default_background > *{
@@ -303,6 +304,9 @@ md-tabs {
     flex-direction: column;
 }
 
+.md-headline {
+    color: rgba(0,0,0,0.87);
+}
 .md-tabs-content {
     // Based on earlier post, required to get `.md-header` to show correct 'tabs' height
     display: flex;
@@ -444,7 +448,8 @@ md-card table th {
 }
 
 .appPrimary {
-    background-color: #00abb1;
+    /*background-color: #00abb1;*/
+    background-color:  rgb(224, 224, 224);
 }
 .masterView{
     background-color: #E0E0E0;

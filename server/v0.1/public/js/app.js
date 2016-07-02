@@ -95,12 +95,12 @@ mainModule.config(['$stateProvider', '$urlRouterProvider', '$locationProvider',
     }]);
 mainModule.config(function ($mdThemingProvider) {
     $mdThemingProvider.definePalette('amazingPalettePrimary', {
-        '50': '00abb1',
-        '100': '00abb1',
-        '200': '00abb1',
-        '300': '00abb1',
-        '400': '00abb1',
-        '500': '00abb1',
+        '50': 'E0E0E0',
+        '100': 'E0E0E0',
+        '200': 'E0E0E0',
+        '300': 'E0E0E0',
+        '400': 'E0E0E0',
+        '500': 'E0E0E0',
         '600': 'e53935',
         '700': 'd32f2f',
         '800': 'c62828',

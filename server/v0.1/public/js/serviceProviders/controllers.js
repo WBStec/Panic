@@ -34,7 +34,6 @@ controllerModule.controller('SPManageCtrl', [
                     .success(function(data, status, headers, config) {
                         console.log('SUCCESSFULL RETURN');
                         //TODO: Add a loader
-                        debugger;
                         self.allSPs = self.filterUsers(data);
                         // self.resolveLocation(self.allSPs);
                         self.sps = self.allSPs;
@@ -192,7 +191,6 @@ controllerModule.controller('SPManageCtrl', [
 
             $scope.add = function() {
                 
-                debugger;
                 if($scope.waiting == true)
                 {
                     return;
