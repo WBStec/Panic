@@ -30,8 +30,21 @@ serviceModule.factory('NavService', ['$q','$rootScope', function($q,$rootScope) 
         },
         loadUserItems: function(){
 
+            if(typeof $rootScope == 'undefined' )
+            {
+                $rootScope = {};
+            }
+            if(typeof $rootScope.user == 'undefined' )
+            {
+                $rootScope.user = {};
+            }
+            if(typeof $rootScope.user.role == 'undefined')
+            {
+                $rootScope.user.role = '';
+            }
+
             var userPermissions = $rootScope.user.role;
-            
+
             var result = navItems.filter(function(elem){
 
                 if(elem.permission.indexOf(userPermissions)!=-1)
