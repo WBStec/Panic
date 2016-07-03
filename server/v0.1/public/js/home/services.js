@@ -30,5 +30,10 @@ serviceModule.factory('AlarmService', ['$http', function($http) {
 			var url = 'http://'+location.host+'/api/alarms/' + data._id;
 			return $http.put(url,data);
         }
+        ,
+        getAreas: function(data) {
+            var url = 'http://'+location.host+'/api/areas';
+            return $http.get(url);
+        }
     }
 }]);

@@ -389,6 +389,7 @@ router.route('/alarms/')
                 {
                     var alarm = JSON.parse(JSON.stringify(alarms[i]));
                     alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
+                    alarm.area = flatList[alarm.uuid].area;
                     sendAlarm.push(alarm);
                 }
                 res.json(sendAlarm);
@@ -449,6 +450,7 @@ router.route('/alarms/:id')
                         {
                             var alarm = JSON.parse(JSON.stringify(alarms[i]));
                             alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
+                            alarm.area = flatList[alarm.uuid].area;
                             sendAlarm.push(alarm);
                         }
                         res.json(sendAlarm);

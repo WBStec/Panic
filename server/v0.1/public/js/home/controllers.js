@@ -72,10 +72,29 @@ mainModule.controller('HomeCtrl', [
 
         }
 
+        self.initAreas = function()
+        {
+                AlarmService.getAreas()
+                    .success(function(data, status, headers, config) {
+                        console.log('SUCCESSFULL RETURN');
 
-        self.initAlarms(function()
-        {        
-        });
+                        var flatList = {}
+                        for (var s in data) {
+                          flatList[data[s].code] = data[s];
+                        }
+
+                        self.areas = flatList;
+                        $scope.areas = self.areas;
+                        self.initAlarms();
+                    })
+                    .error(function(data, status, headers, config)
+                    {
+                        alert('Get User FAIL ' + data);
+                    });
+
+        };
+
+        self.initAreas();
 
         self.loop = function()
         {
