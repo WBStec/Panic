@@ -7,7 +7,8 @@ var ServiceProviderSchema   = new Schema({
 	role: String,
 	name: String,
 	phone: String,
-	active: Boolean
+	active: Boolean,
+	areas: Array
 });
 
 module.exports = mongoose.model('ServiceProviderSchema', ServiceProviderSchema);

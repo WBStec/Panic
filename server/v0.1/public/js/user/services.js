@@ -4,6 +4,10 @@ serviceModule.factory('UserService', ['$http', function($http) {
             var url = 'http://'+location.host+'/api/users';
             return $http.get(url);
         },
+        getAreas: function(data) {
+            var url = 'http://'+location.host+'/api/areas';
+            return $http.get(url);
+        },
         setUserState: function(data) {
             
             var url = 'http://'+location.host+'/api/users/state/' + data.id;

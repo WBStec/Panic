@@ -23,7 +23,7 @@
                     <tbody>
                         <tr ng-repeat="alarm in alarms track by $index" ng-click="showAlarm($event,alarm)" ng-class="{'open': alarm.state == 'open'}">
                             <td>{{alarm.alarmDate}}</td>
-                            <td>{{alarm.uuid}}</td>
+                            <td>{{alarm.user}}</td>
                             <td>{{alarm.gpsLat}}</td>
                             <td>{{alarm.gpsLon}}</td>
                             <td>{{alarm.source}}</td>

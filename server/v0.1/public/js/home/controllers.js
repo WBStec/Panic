@@ -28,7 +28,7 @@ mainModule.controller('HomeCtrl', [
         self.soundAlarm = false;
         self.initAlarms = function(cb)
         {
-          AlarmService.getAlarms()
+          AlarmService.getAlarms($rootScope.user)
               .success(function(data, status, headers, config) {
                   console.log('SUCCESSFULL RETURN');
                   //TODO: Add a loader

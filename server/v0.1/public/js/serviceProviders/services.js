@@ -4,6 +4,10 @@ serviceModule.factory('SPService', ['$http', function($http) {
             var url = 'http://'+location.host+'/api/sp';
             return $http.get(url);
         },
+        getAreas: function(data) {
+            var url = 'http://'+location.host+'/api/areas';
+            return $http.get(url);
+        },
         updateUser: function(data) {
             
             var url = 'http://'+location.host+'/api/sp/' + data._id;

@@ -8,6 +8,7 @@ mainModule.controller('LoginCtrl', [
             LoginService.login($scope.login)
                 .success(function(data, status, headers, config) {
                     console.log('SUCCESSFULL RETURN');
+                    debugger;
                     if(typeof data.login == 'undefined')
                     {
                         //Todo: Show nice popup Msg.

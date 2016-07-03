@@ -3,10 +3,12 @@ var express  = require('express');
 var User     = require('./models/user');
 var Alarm     = require('./models/alarm');
 var ServiceProvider = require('./models/serviceProvider');
+var Area = require('./models/area');
 
 var mongoose   = require('mongoose');
 var path = require('path');
 var crypto = require('crypto');
+var fs = require('fs');
 
 mongoose.connect('mongodb://localhost:27017/panic'); // connect to our database
 
@@ -51,6 +53,45 @@ router.use(function(req, res, next) {
 // REGISTER OUR ROUTES -------------------------------
 // all of our routes will be prefixed with /api
 app.use('/api', router);
+
+router.route('/login/:username/:password').get(function(req, res) {
+
+        //req.params.username
+        console.log('AUTH ' + req.params.username + " " + req.params.password);
+       
+
+        ServiceProvider.findOne({login:req.params.username,password:req.params.password,}, function(err, sp) {
+            if (err)
+                res.send(err);
+
+            console.log(JSON.stringify(sp))
+
+            if(sp == null)
+            {
+                res.json('Login Failed');
+            }else
+            {
+                 var data = 
+                {
+                    login : 'good',
+                    id : sp._id,
+                    name : sp.name,
+                    role : sp.role
+                }
+                res.json(data);
+            }
+        });
+
+
+        
+    });
+
+
+router.route('/areas').get(function(req, res) {
+        var content = fs.readFileSync("./app/areas.json");
+        var jsonContent = JSON.parse(content);
+        res.json(jsonContent);
+    });
 
 router.route('/sms')
 
@@ -127,6 +168,10 @@ router.route('/users')
          {
             req.body.active = true;
          }
+         if(typeof req.body.area == 'undefined')
+         {
+            req.body.area = 0;
+         }
 
     console.log('POST USER ' + JSON.stringify(req.body));        
         var user = new User();      // create a new instance of the User model
@@ -138,6 +183,7 @@ router.route('/users')
         user.direction = req.body.direction;  // set the users name (comes from the request)
         user.photo = req.body.photo;  // set the users name (comes from the request)
         user.active = req.body.active;  
+        user.area = req.body.area;  
         // save the bear and check for errors
         user.save(function(err) {
             if (err)
@@ -172,7 +218,7 @@ router.route('/users/:id').put(function(req, res) {
             address: req.body.address, 
             direction: req.body.direction, 
             active: req.body.active, 
-
+            area : req.body.area
         }, function(err, affected, resp) {
             if (err) 
                 res.send(err);
@@ -209,6 +255,7 @@ router.route('/sp')
         serviceProvider.name = req.body.name;
         serviceProvider.phone = req.body.phone;
         serviceProvider.active = req.body.active;
+        serviceProvider.areas = req.body.areas;
 
 
         // save the bear and check for errors
@@ -222,7 +269,7 @@ router.route('/sp')
     })
     // get all the users (accessed at GET http://localhost:8080/api/users)
     .get(function(req, res) {
-        ServiceProvider.find(function(err, users) {
+        ServiceProvider.find({role:'SP'},function(err, users) {
             if (err)
                 res.send(err);
 
@@ -243,7 +290,8 @@ router.route('/sp/:id').put(function(req, res) {
             password : req.body.password,
             name : req.body.name,
             phone : req.body.phone,
-            active : req.body.active
+            active : req.body.active,
+            areas : req.body.areas
         }, function(err, affected, resp) {
             if (err) 
                 res.send(err);
@@ -324,6 +372,82 @@ router.route('/alarms/')
             // alarms.reverse();
             res.json(alarms);
         });
+    });
+
+
+router.route('/alarms/:id')
+
+    // get the user with that uuidid (accessed at GET http://localhost:8080/api/userss/:uuid)
+    .get(function(req, res) {
+
+// Alarm.findOne({_id:req.params.id}, function(err, alarm) {
+//             if (err)
+//                 res.send(err);
+
+//             console.log(JSON.stringify(alarm));
+//             var obj = {};
+//             obj.state = alarm.state;
+//             res.json(obj);
+//         });
+
+        ServiceProvider.findOne({_id:req.params.id},function(err, sp) {
+            if (err)
+                res.send(err);
+
+            if(sp != null)
+            {
+                
+                var areas = sp.areas;
+                
+                User.find({ area : { $in : areas }},function(err, users) {
+                    if (err)
+                        res.send(err);
+
+                    var flatList = {}
+                    for (var s in users) {
+                      flatList[users[s].uuid] = users[s];
+                    }
+
+                    // console.log(JSON.stringify(flatList));
+
+                    var alarmUsers = [];
+                    for (var i in users)
+                    {
+                        alarmUsers.push(users[i].uuid)
+                    }
+
+                    Alarm.find({ uuid : { $in : alarmUsers }}).sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+                        if (err)
+                            res.send(err);
+
+                        var sendAlarm = [];
+                        for(var i in alarms)
+                        {
+                            var alarm = JSON.parse(JSON.stringify(alarms[i]));
+                            alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
+                            sendAlarm.push(alarm);
+                        }
+                        res.json(sendAlarm);
+                    });
+                    // res.json([]); 
+
+                });
+                
+            }
+            else
+            {
+                res.json([]); 
+            }
+
+        });
+
+        // Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+        //     if (err)
+        //         res.send(err);
+
+        //     // alarms.reverse();
+        //     res.json(alarms);
+        // });
     });
 
 
