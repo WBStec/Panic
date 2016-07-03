@@ -4,24 +4,7 @@ mainModule.controller('HomeCtrl', [
         var self = this;
 
         $rootScope.view = 'home';
-        self.initUsers = function()
-        {
-                AlarmService.getUsers()
-                    .success(function(data, status, headers, config) {
-                        console.log('SUCCESSFULL RETURN');
-                        //TODO: Add a loader
-                        // self.users = self.filterUsers(data)
-                        // self.resolveLocation(self.users);
-                        self.users = data;
-                        $scope.users = self.users.reverse();
-
-                    })
-                    .error(function(data, status, headers, config)
-                    {
-                        alert('Get User FAIL ' + data);
-                    });
-
-        },
+       
 
         self.lastId = '';
         self.firstCheck = true;
@@ -91,8 +74,7 @@ mainModule.controller('HomeCtrl', [
 
 
         self.initAlarms(function()
-        {
-            self.initUsers();        
+        {        
         });
 
         self.loop = function()
@@ -144,21 +126,27 @@ mainModule.controller('HomeCtrl', [
           var useFullScreen = ($mdMedia('sm') || $mdMedia('xs')) && $scope.customFullscreen;
           self.alarm = alarm;
 
-          for(var i in self.users)
-          {
-            if(self.users[i].uuid == alarm.uuid)
-            {
-              alarm.name = self.users[i].name;
-              alarm.surname = self.users[i].surname;
-              alarm.phone = self.users[i].phone;
-              alarm.address = self.users[i].address;
-              alarm.direction = self.users[i].direction;
-              alarm.photo = self.users[i].photo;
-              break;
-            }
-          }
 
-          $mdDialog.show({
+          $rootScope.showCustomLoader("Please wait while loading user.");
+          
+
+          AlarmService.getUser(alarm)
+          .success(function(data, status, headers, config) {
+
+              $rootScope.hideCustomLoader();
+              console.log('SUCCESSFULL RETURN');
+              //TODO: Add a loader
+              // self.users = self.filterUsers(data)
+              // self.resolveLocation(self.users);
+
+              alarm.name = data.name;
+              alarm.surname = data.surname;
+              alarm.phone = data.phone;
+              alarm.address = data.address;
+              alarm.direction = data.direction;
+              alarm.photo = data.photo;
+
+              $mdDialog.show({
                     controller: viewAlarmCtrl,
                     templateUrl: '../partials/alarmDailog.html',
                     parent: angular.element(document.body),
@@ -173,6 +161,29 @@ mainModule.controller('HomeCtrl', [
                     // self.status = 'You cancelled the dialog.';
                     // $rootScope.showToastBtmRight("Cancelled user update.");
                 });
+
+
+          })
+          .error(function(data, status, headers, config)
+          {
+              alert('Get User FAIL ' + data);
+          });
+
+          // for(var i in self.users)
+          // {
+          //   if(self.users[i].uuid == alarm.uuid)
+          //   {
+          //     alarm.name = self.users[i].name;
+          //     alarm.surname = self.users[i].surname;
+          //     alarm.phone = self.users[i].phone;
+          //     alarm.address = self.users[i].address;
+          //     alarm.direction = self.users[i].direction;
+          //     alarm.photo = self.users[i].photo;
+          //     break;
+          //   }
+          // }
+
+          
         }
 
         function viewAlarmCtrl($scope, $mdDialog) {

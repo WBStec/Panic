@@ -330,7 +330,8 @@ router.route('/users/:uuid')
 
     // get the user with that uuidid (accessed at GET http://localhost:8080/api/userss/:uuid)
     .get(function(req, res) {
-        User.findOne({uuid:req.params.uuid}, function(err, user) {
+        User.findOne({uuid:req.params.uuid},null,{sort:{$natural:-1}}, function(err, user)  {
+        // User.findOne({uuid:req.params.uuid}, function(err, user) {
             if (err)
                 res.send(err);
             res.json(user);
@@ -365,14 +366,37 @@ router.route('/alarms/')
     })
     // get all the users (accessed at GET http://localhost:8080/api/alarms)
     .get(function(req, res) {
-        Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+
+
+
+        User.find(function(err, users) {
             if (err)
                 res.send(err);
 
-            // alarms.reverse();
-            res.json(alarms);
-        });
-    });
+            var flatList = {}
+            for (var s in users) {
+              flatList[users[s].uuid] = users[s];
+            }
+
+            // console.log(JSON.stringify(flatList));
+
+            Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+                if (err)
+                    res.send(err);
+
+                var sendAlarm = [];
+                for(var i in alarms)
+                {
+                    var alarm = JSON.parse(JSON.stringify(alarms[i]));
+                    alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
+                    sendAlarm.push(alarm);
+                }
+                res.json(sendAlarm);
+                // alarms.reverse();
+            });
+                    // res.json([]); 
+    })
+    });;
 
 
 router.route('/alarms/:id')
