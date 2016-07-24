@@ -4,7 +4,7 @@ angular.module('starter.controllers', [])
  
     document.addEventListener('deviceready', function () {
 
-      var fileName = "panic_cache_1.txt";
+      var fileName = "panic_cache_2.txt";
 
       $cordovaFile.checkFile(cordova.file.dataDirectory, fileName)
         .then(function (success) {
@@ -24,7 +24,7 @@ angular.module('starter.controllers', [])
 })
 .controller('RegisterCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaFile,$cordovaCamera) {
  
-    var fileName = "panic_cache_1.txt";
+    var fileName = "panic_cache_2.txt";
     
     $scope.data = {};
  
@@ -37,6 +37,48 @@ angular.module('starter.controllers', [])
     $scope.data.address = '';
     $scope.data.direction = '';
     $scope.data.photo = 'img/ph.png';
+
+   $scope.showAlert = function(title,msg,button) {
+    var obj = {
+         title: title,
+         template: msg
+       }
+       
+       if(button == false)
+       {
+        obj.buttons = [];
+       }
+        $scope.alertPopup = $ionicPopup.alert(obj);
+
+     };
+     $scope.hideAlert = function()
+     {
+        $scope.alertPopup.close();
+     }
+
+    $scope.getAreas = function()
+    {
+      alert('GET AREAS');
+      try{
+        $scope.showAlert('Downloading app data','Please wait while downloading app data.',false);
+        alert('GET AREAS');
+
+            panicService.getAreas().success(function(data) {
+              
+              alert(data);
+
+              $scope.hideAlert();
+              $scope.areas = data;
+            }).error(function(x,y,z)
+            {
+              $scope.showAlert('Error','Could not register');
+            });
+      }catch(err)
+      {
+        alert(err);
+      }
+    }
+    $scope.getAreas();
 
     $scope.register = function() {
 
@@ -75,6 +117,8 @@ angular.module('starter.controllers', [])
         $scope.data.uuid = uuid;
 
         try{
+            alert($scope.data.area);
+
             panicService.register($scope.data).success(function(data) {
 
               $cordovaFile.writeFile(cordova.file.dataDirectory, fileName, uuid, true)
@@ -117,13 +161,6 @@ angular.module('starter.controllers', [])
           });
 
     }
-
-      $scope.showAlert = function(title,msg) {
-          $scope.alertPopup = $ionicPopup.alert({
-           title: title,
-           template: msg
-         });
-       };
 
 })
 .controller('MainCtrl', function($scope, $ionicPopup, $state,panicService,$cordovaGeolocation,$cordovaFile) {
@@ -386,6 +423,7 @@ angular.module('starter.controllers', [])
   $scope.stateLoop = function(timeout)
   {
       setTimeout(function(){
+        try{
           $scope.getAlarmState(function(data){
 
             if($scope.currAlarmState != data.state)
@@ -397,7 +435,7 @@ angular.module('starter.controllers', [])
             }
 
             $scope.currAlarmState = data.state;
-
+            
             if($scope.currAlarmState == 'closed')
             {
                 $scope.btnLabel = "ALARM<br>DONE";
@@ -412,6 +450,10 @@ angular.module('starter.controllers', [])
             }
             
           })
+        }catch(err)
+        {
+          $scope.stateLoop(timeout);
+        }
 
     }, timeout);   
   }
