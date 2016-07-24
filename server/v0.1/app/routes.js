@@ -389,10 +389,15 @@ router.route('/alarms/')
                 var sendAlarm = [];
                 for(var i in alarms)
                 {
-                    var alarm = JSON.parse(JSON.stringify(alarms[i]));
-                    alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
-                    alarm.area = flatList[alarm.uuid].area;
-                    sendAlarm.push(alarm);
+                    try{
+                        var alarm = JSON.parse(JSON.stringify(alarms[i]));
+                        alarm.user = flatList[alarm.uuid].name + ' ' +flatList[alarm.uuid].surname;
+                        alarm.area = flatList[alarm.uuid].area;
+                        sendAlarm.push(alarm);
+                    }catch(err)
+                    {
+                        console.log('ERROR ' + err);
+                    }
                 }
                 res.json(sendAlarm);
                 // alarms.reverse();
