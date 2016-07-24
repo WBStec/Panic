@@ -403,7 +403,6 @@ router.route('/alarms/')
 
 
 router.route('/alarmUser/:id')
-    console.log('alarmUser');
   .get(function(req, res) {
         Alarm.findOne({_id:req.params.id},function(err, ua) {
              if (err)
