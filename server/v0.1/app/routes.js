@@ -184,6 +184,8 @@ router.route('/users')
         user.photo = req.body.photo;  // set the users name (comes from the request)
         user.active = req.body.active;  
         user.area = req.body.area;  
+        user.lat = req.body.lat;  
+        user.lon = req.body.lon;
         // save the bear and check for errors
         user.save(function(err) {
             if (err)
@@ -400,6 +402,16 @@ router.route('/alarms/')
     });;
 
 
+router.route('/alarmUser/:id')
+    console.log('alarmUser');
+  .get(function(req, res) {
+        Alarm.findOne({_id:req.params.id},function(err, ua) {
+             if (err)
+                res.send(err);
+            res.json(ua);
+        });
+    })
+
 router.route('/alarms/:id')
 
     // get the user with that uuidid (accessed at GET http://localhost:8080/api/userss/:uuid)
@@ -415,7 +427,10 @@ router.route('/alarms/:id')
 //             res.json(obj);
 //         });
 
+
         ServiceProvider.findOne({_id:req.params.id},function(err, sp) {
+
+
             if (err)
                 res.send(err);
 

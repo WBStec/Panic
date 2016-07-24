@@ -3,17 +3,21 @@ angular.module('starter.services', [])
 .service('LoginService', function($http) {
     return {
         getUser : function(userName,password) {
-        return $http.get('http://10.0.0.101:8080/api/users/' + userName + '/' + password);
-      }
+          return $http.get('http://10.0.0.101:8080/api/users/' + userName + '/' + password);
+        }
     }
 })
 .service('panicService',function($http)
 {
   return {
-    // host:'http://10.0.0.101:8080'
-    host:'http://196.31.215.98:80'
+    host:'http://10.0.0.102:8080'
+    // host:'http://196.31.215.98:80'
     // host:'http://10.0.0.104:8080'
     ,
+    getAreas : function(userName,password) {
+          return $http.get(this.host + '/api/areas');
+      },
+
     register : function(formData)
     {
       console.log('register');
@@ -36,7 +40,7 @@ angular.module('starter.services', [])
     ,
     getState : function(alarmId)
     { 
-      return $http.get(this.host + '/api/alarms/' + alarmId);
+      return $http.get(this.host + '/api/alarmUser/' + alarmId);
     }
   }
 })

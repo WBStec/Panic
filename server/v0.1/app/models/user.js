@@ -10,7 +10,9 @@ var UserSchema   = new Schema({
 	address: String,
 	direction:String,
 	serviceProvider:String,
-	area:Number,
+	area:String,
+	gpsLat:String,
+	gpsLon:String,
 	active: Boolean
 });
 

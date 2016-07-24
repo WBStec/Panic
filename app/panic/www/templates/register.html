@@ -37,7 +37,19 @@
               <input type="text" placeholder="Direction" ng-model="data.direction">
           </label>
       </div>
+<div class="list list-inset" style="margin-top:10px">
+ <label class="item item-input item-select">
+                    <div class="input-label">
+                        Area
+                    </div>
+                    <select ng-model="data.area">
+                        <option  ng-repeat="area in areas" value="{{area.code}}" ng-show="area.code > 6"> {{area.area}}</option>
+                    </select>
+                </label>
+</div>
+
       <center  >
+        
           <img ng-src="{{data.photo}}" alt="Place Holder" height="200" width="200" ng-click="takePhoto()" style="margin-top:10px;">
       </center>
 
