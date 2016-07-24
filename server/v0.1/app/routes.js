@@ -396,6 +396,8 @@ router.route('/alarms/')
                         sendAlarm.push(alarm);
                     }catch(err)
                     {
+                        console.log(JSON.stringify(users));
+                        console.log('alarmuuid:' + alarm.uuid);
                         console.log('ERROR ' + err);
                     }
                 }
