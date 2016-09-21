@@ -1,0 +1,24 @@
+machine:
+  node:
+    version: v4.2
+dependencies:
+  pre:
+    # Setup for CodePush
+    - npm install -g cordova code-push-cli ionic
+    - code-push login --accessKey $CODE_PUSH_ACCESS_KEY
+    # Setup cordova for generating build
+    - ionic state restore
+  cache_directories:
+    - "www/lib/bower-components"
+    - "plugins"
+    - "platforms"
+deployment:
+  staging:
+    branch: /.*/
+    commands:
+      # Prepare builds
+      - cordova prepare
+      # Create deployment and publish a release
+      - node deploy.js $CODE_PUSH_APP_NAME $APP_STORE_VERSION $CIRCLE_PR_NUMBER
+      # Update the build server
+      - node ci-hook.js $CODE_PUSH_APP_NAME

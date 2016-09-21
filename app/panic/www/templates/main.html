@@ -1,12 +1,14 @@
 <ion-view view-title="Register" name="register-view">
-  <ion-content id="mapContent" scroll="false" class="padding" style="background-color:#EFEFEF" style="height:100%">
-  		<div style="width:100%;height:100%" >
+  <ion-content id="mapContent" scroll="false" class="padding" style="background-color:#EFEFEF" >
+
+      <div id="map" data-tap-disabled="true" style="width: 100%;height: 100%;"></div>
+  		<!-- <div style="width:100%;height:100%" >
 			<img ng-show="lat!= 0 " style="min-width:100%; max-width:100%;" ng-src="data:image/JPEG;base64,{{map}}" id="locationImage" />
 			<div ng-show="lat == 0 "class="spinnerHalf">
         		<ion-spinner icon="android" ></ion-spinner>
       		</div>
-		</div>
-		<div class="buttonDiv" style="width:100%">
+		</div> -->
+		<div class="buttonDiv" style="width:100%;position: absolute;top: 60%;">
       <center>
       	  <button id='panicBtn' ng-mouseup="mouseUp()" ng-mousedown="mouseDown($event)" ng-mouseleave="mouseUp()" my-touchend="mouseUp()" ng-mouseup="onMouseUp($event)"
            ng-mouseleave="mouseUp($event)" ng-mousemove="mouseUp($event)" ng-mouseover="mouseUp($event)" ng-click="mouseUp($event)" class="button button-block" style="border: 5px solid white;box-shadow: gray 0px 0px 10px;background-color:#13BFE6;color:white;border-radius: 50%;width:200px;height:200px;" 

@@ -1,6 +1,7 @@
 var express  = require('express');
 
 var User     = require('./models/user');
+var Responder     = require('./models/responder');
 var Alarm     = require('./models/alarm');
 var ServiceProvider = require('./models/serviceProvider');
 var Area = require('./models/area');
@@ -198,6 +199,112 @@ router.route('/users')
     // get all the users (accessed at GET http://localhost:8080/api/users)
     .get(function(req, res) {
         User.find(function(err, users) {
+            if (err)
+                res.send(err);
+
+            res.json(users);
+        });
+    });
+
+
+    router.route('/responder/location')
+
+    // create a bear (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+         // res.json({ message: 'User created!' });
+         // return;
+         
+
+    console.log('POST RESPONDER Location' + JSON.stringify(req.body)); 
+
+        Responder.findOne({uuid:req.body.uuid}, function(err, responder) {
+            if (err)
+                res.send(err);
+
+            // console.log(JSON.stringify(responder));
+
+            Responder.update({_id: responder.id}, {
+                gpsLat: req.body.lat, 
+                gpsLon: req.body.long
+            }, function(err, affected, resp) {
+               // console.log(affected);
+               // res.json(affected);
+
+          
+
+                   Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+                        if (err)
+                            res.send(err);
+
+                        var sendList = [];
+                        for(var i in alarms)
+                        {
+                            if(alarms[i].state == 'open')
+                            {
+                                sendList.push(alarms[i]);
+                            }
+                        }
+                        console.log(JSON.stringify(sendList));
+
+                        res.json({ message: 'Responder created!' ,data:sendList});
+                        // res.json(sendAlarm);
+                        // alarms.reverse();
+                    });
+            })
+        });
+
+
+        // var responder = new Responder();      // create a new instance of the User model
+        // responder.uuid = req.body.uuid;  // set the users name (comes from the request)
+        // responder.name = req.body.name;  // set the users name (comes from the request)
+        // responder.surname = req.body.surname;  // set the users name (comes from the request)
+        // responder.photo = req.body.photo;  // set the users name (comes from the request)
+        // responder.active = req.body.active;  
+        // // save the bear and check for errors
+        // responder.save(function(err) {
+        //     if (err)
+        //         res.send(err);
+
+        //     res.json({ message: 'Responder created!' });
+        // });
+        
+    })
+
+
+    router.route('/responder')
+
+    // create a bear (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+         // res.json({ message: 'User created!' });
+         // return;
+         if(typeof req.body.uuid == 'undefined')
+         {
+            req.body.uuid = crypto.randomBytes(32).toString('hex');
+         }
+         if(typeof req.body.active == 'undefined')
+         {
+            req.body.active = true;
+         }
+
+    console.log('POST RESPONDER ' + JSON.stringify(req.body));        
+        var responder = new Responder();      // create a new instance of the User model
+        responder.uuid = req.body.uuid;  // set the users name (comes from the request)
+        responder.name = req.body.name;  // set the users name (comes from the request)
+        responder.surname = req.body.surname;  // set the users name (comes from the request)
+        responder.photo = req.body.photo;  // set the users name (comes from the request)
+        responder.active = req.body.active;  
+        // save the bear and check for errors
+        responder.save(function(err) {
+            if (err)
+                res.send(err);
+
+            res.json({ message: 'Responder created!' });
+        });
+        
+    })
+    // get all the users (accessed at GET http://localhost:8080/api/users)
+    .get(function(req, res) {
+        Responder.find(function(err, users) {
             if (err)
                 res.send(err);
 
