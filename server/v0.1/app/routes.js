@@ -270,6 +270,77 @@ router.route('/users')
         
     })
 
+    router.route('/responder/response')
+
+    // create a bear (accessed at POST http://localhost:8080/api/users)
+    .post(function(req, res) {
+         // res.json({ message: 'User created!' });
+         // return;
+         
+
+    console.log('POST RESPONDER respondrespondrespondrespondrespond ' + JSON.stringify(req.body)); 
+
+        // var obj = {
+        //   "_id": req.params.id,
+        //   "state": req.body.state,
+        //   "uuid": req.body.uuid,
+        //   "gpsLon": req.body.gpsLon,
+        //   "gpsLat": req.body.gpsLat,
+        //   "alarmDate": req.body.alarmDate,
+        //   "closeDate": req.body.closeDate,
+        // }
+
+        var obj = {
+            "state" : "in Progress"
+        }
+        
+        var query = {'_id':req.body._id};
+        Alarm.findOneAndUpdate(query, obj, {upsert:true}, function(err, doc){
+            if (err) 
+                res.send(err);
+            else
+                res.json("succesfully saved");
+        });     
+
+
+
+        // Responder.findOne({uuid:req.body.uuid}, function(err, responder) {
+        //     if (err)
+        //         res.send(err);
+
+        //     // console.log(JSON.stringify(responder));
+
+        //     Responder.update({_id: responder.id}, {
+        //         gpsLat: req.body.lat, 
+        //         gpsLon: req.body.long
+        //     }, function(err, affected, resp) {
+        //        // console.log(affected);
+        //        // res.json(affected);
+
+          
+
+        //            Alarm.find().sort({$natural:-1}).limit(20).exec(function(err, alarms) {
+        //                 if (err)
+        //                     res.send(err);
+
+        //                 var sendList = [];
+        //                 for(var i in alarms)
+        //                 {
+        //                     if(alarms[i].state == 'open')
+        //                     {
+        //                         sendList.push(alarms[i]);
+        //                     }
+        //                 }
+        //                 console.log(JSON.stringify(sendList));
+
+        //                 res.json({ message: 'Responder created!' ,data:sendList});
+        //                 // res.json(sendAlarm);
+        //                 // alarms.reverse();
+        //             });
+        //     })
+        // });
+        
+    })
 
     router.route('/responder')
 
