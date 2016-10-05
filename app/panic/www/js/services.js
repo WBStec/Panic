@@ -10,8 +10,8 @@ angular.module('starter.services', [])
 .service('panicService',function($http)
 {
   return {
-    host:'http://10.0.0.102:8080'
-    // host:'http://196.31.215.98:80'
+    // host:'http://10.0.0.102:8080'
+    host:'http://196.31.215.98:80'
     // host:'http://10.0.0.104:8080'
     ,
     getAreas : function(userName,password) {

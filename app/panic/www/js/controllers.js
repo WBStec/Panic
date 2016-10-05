@@ -58,14 +58,10 @@ angular.module('starter.controllers', [])
 
     $scope.getAreas = function()
     {
-      alert('GET AREAS');
       try{
         $scope.showAlert('Downloading app data','Please wait while downloading app data.',false);
-        alert('GET AREAS');
 
             panicService.getAreas().success(function(data) {
-              
-              alert(data);
 
               $scope.hideAlert();
               $scope.areas = data;
@@ -117,8 +113,6 @@ angular.module('starter.controllers', [])
         $scope.data.uuid = uuid;
 
         try{
-            alert($scope.data.area);
-
             panicService.register($scope.data).success(function(data) {
 
               $cordovaFile.writeFile(cordova.file.dataDirectory, fileName, uuid, true)
