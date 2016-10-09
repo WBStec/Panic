@@ -181,6 +181,9 @@ router.route('/users')
         user.phone = req.body.phone;  // set the users name (comes from the request)
         user.address = req.body.address;  // set the users name (comes from the request)
         user.direction = req.body.direction;  // set the users name (comes from the request)
+        user.sms1 = req.body.sms1;  // set the users name (comes from the request)
+        user.sms2 = req.body.sms2;  // set the users name (comes from the request)
+        user.medical = req.body.medical;  // set the users name (comes from the request)medical
         user.photo = req.body.photo;  // set the users name (comes from the request)
         user.active = req.body.active;  
         user.area = req.body.area;  
@@ -219,6 +222,9 @@ router.route('/users/:id').put(function(req, res) {
             phone: req.body.phone, 
             address: req.body.address, 
             direction: req.body.direction, 
+            sms1: req.body.sms1, 
+            sms2: req.body.sms2, 
+            medical: req.body.medical, 
             active: req.body.active, 
             area : req.body.area
         }, function(err, affected, resp) {

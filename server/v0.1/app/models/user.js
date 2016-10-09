@@ -13,7 +13,10 @@ var UserSchema   = new Schema({
 	area:String,
 	gpsLat:String,
 	gpsLon:String,
-	active: Boolean
+	active: Boolean,
+	medical:String,
+	sms1:String,
+	sms2:String
 });
 
 module.exports = mongoose.model('User', UserSchema);
