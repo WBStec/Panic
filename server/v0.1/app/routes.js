@@ -10,6 +10,8 @@ var path = require('path');
 var crypto = require('crypto');
 var fs = require('fs');
 
+var http = require('http');
+
 mongoose.connect('mongodb://localhost:27017/panic'); // connect to our database
 
 
@@ -367,8 +369,43 @@ router.route('/alarms/')
             if (err)
                 res.send(err);
 
-            console.log(JSON.stringify(alarm));
-            res.json({ message: 'Alarm created!' ,alarm:alarm.id});
+	     console.log(JSON.stringify(alarm));
+             User.findOne({uuid:req.body.uuid},null,{sort:{$natural:-1}}, function(err, user)  {
+                if (err)
+                    res.send(err);
+                console.log(JSON.stringify(user));
+		var message = "Please help " + user.name + ' ' + user.surname + ' with number : ' + user.phone + ' at location lat:'+req.body.gpsLat+' long:'+req.body.gpsLon+ ' https://www.google.co.za/maps?q=' + req.body.gpsLat + ',' + req.body.gpsLon;
+		var url = "http://www.mymobileapi.com/api5/http5.aspx?Type=sendparam&username=Asapp&password=AsappWr2016&numto=0835548198&data1=" + message;
+                
+                if(user.active)
+                {
+                    var url = "http://www.mymobileapi.com/api5/http5.aspx?Type=sendparam&username=Asapp&password=AsappWr2016&numto=0835548198&data1=" + message;
+                    http.get(url, function(res) {
+
+                    })
+
+                    if(user.sms1 != '')
+                    {
+                        var url2 = "http://www.mymobileapi.com/api5/http5.aspx?Type=sendparam&username=Asapp&password=AsappWr2016&numto="+user.sms1+"&data1=" + message;
+                        http.get(url2, function(res) {
+
+                        })
+                    }
+
+                    if(user.sms2 != '')
+                    {
+                        var url3 = "http://www.mymobileapi.com/api5/http5.aspx?Type=sendparam&username=Asapp&password=AsappWr2016&numto="+user.sms2+"&data1=" + message;
+                        http.get(url3, function(res) {
+
+                        })
+                    }
+
+                }
+
+
+                res.json({ message: 'Alarm created!' ,alarm:alarm.id});
+            });
+
         });
         
     })
